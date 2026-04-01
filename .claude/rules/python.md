@@ -1,25 +1,25 @@
 ---
 globs: "**/*.py"
 ---
-# Python / FastAPI 규칙
+# Python / FastAPI Rules
 
-## 구조
-- router → service → repository 레이어 분리.
-- Pydantic 모델로 요청/응답 타입 강제.
-- 의존성 주입은 FastAPI Depends() 사용.
+## Structure
+- router → service → repository layer separation.
+- Pydantic models for request/response type enforcement.
+- Dependency injection via FastAPI Depends().
 
-## 비동기
-- async/await 일관되게 사용. sync 함수 혼용 금지.
-- DB 작업은 반드시 async (asyncpg / SQLAlchemy async).
+## Async
+- Use async/await consistently. No mixing with sync functions.
+- DB operations must be async (asyncpg / SQLAlchemy async).
 
-## 에러 처리
-- HTTPException으로 명시적 상태 코드 반환.
-- 예상 가능한 에러는 커스텀 Exception 클래스 정의.
+## Error Handling
+- Use HTTPException with explicit status codes.
+- Define custom Exception classes for predictable errors.
 
-## 타입
-- 모든 함수에 타입 힌트 필수.
-- Optional[X] 대신 X | None (Python 3.10+).
+## Types
+- Type hints required on all functions.
+- Use `X | None` instead of `Optional[X]` (Python 3.10+).
 
-## 기타
-- 환경변수는 pydantic-settings BaseSettings로 관리.
-- n8n API 호출은 별도 service 레이어에서만.
+## General
+- Manage env vars with pydantic-settings BaseSettings.
+- n8n API calls only from service layer.

@@ -1,28 +1,28 @@
 ---
 globs: "**/*.go"
 ---
-# Go / Gin 규칙
+# Go / Gin Rules
 
-## 레이어 구조
-- handler → service → repository 순서. 역방향 금지.
-- handler: HTTP 파싱, 유효성 검사, 응답 직렬화만.
-- service: 비즈니스 로직만. DB 직접 접근 금지.
-- repository: DB 쿼리만. 비즈니스 로직 금지.
+## Layer Structure
+- handler → service → repository. No reverse direction.
+- handler: HTTP parsing, validation, response serialization only.
+- service: business logic only. No direct DB access.
+- repository: DB queries only. No business logic.
 
-## 에러 처리
-- 에러는 상위로 전파. 로그는 handler에서만 출력.
-- fmt.Errorf("...: %w", err) 로 컨텍스트 추가.
-- panic 금지 — 초기화 코드 제외.
+## Error Handling
+- Propagate errors upward. Log only at handler layer.
+- Add context with fmt.Errorf("...: %w", err).
+- No panic — except initialization code.
 
-## API 응답 형식
+## API Response Format
 ```go
-// 성공
+// Success
 {"data": ..., "message": "ok"}
-// 실패
+// Error
 {"error": "...", "code": "ERROR_CODE"}
 ```
 
-## 기타
-- goroutine 생성 시 반드시 종료 조건 명시.
-- context.Context는 항상 첫 번째 인자.
-- 구조체 필드 태그: json, db, validate 순서.
+## General
+- Always specify exit condition when spawning goroutines.
+- context.Context is always the first argument.
+- Struct field tag order: json, db, validate.
