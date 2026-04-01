@@ -41,3 +41,24 @@ infrastructure → interfaces/adapters → use_cases → entities
 - Always specify exit condition when spawning goroutines.
 - context.Context is always the first argument.
 - Struct field tag order: json, db, validate.
+
+## Required Skills
+
+When writing, reviewing, or refactoring Go code, **always apply these skills:**
+
+| Situation | Skill |
+|-----------|-------|
+| Any Go code | `/golang-project-layout`, `/golang-error-handling`, `/golang-code-style` |
+| DB / repository layer | `/golang-database` + `/supabase-postgres-best-practices` |
+| Concurrency / goroutines | `/golang-concurrency`, `/golang-context` |
+| Tests | `/golang-testing`, `/golang-stretchr-testify` |
+| Security | `/golang-security` |
+| Observability | `/golang-observability` |
+| gRPC | `/golang-grpc` |
+| Performance | `/golang-performance`, `/golang-benchmark` |
+
+**If skills are not installed:**
+```bash
+npx skills add samber/cc-skills-golang --all -y -a claude-code
+npx skills add supabase/agent-skills -y -a claude-code
+```

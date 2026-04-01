@@ -21,3 +21,15 @@ globs: "**/migrations/**, **/repository*, **/*_repository*, **/db/**, **/*.sql"
 ## General
 - Never log sensitive data (PII, passwords).
 - Always hash passwords with bcrypt or argon2.
+
+## Required Skill: supabase-postgres-best-practices
+
+When writing, reviewing, or optimizing any PostgreSQL query, schema, or migration,
+**always apply `/supabase-postgres-best-practices`**.
+
+Covers: indexes, connection pooling, RLS, schema design, N+1 avoidance, EXPLAIN ANALYZE.
+
+**If not installed:**
+```bash
+npx skills add supabase/agent-skills -y -a claude-code
+```
