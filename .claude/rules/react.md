@@ -46,3 +46,17 @@ Each slice (`features/`, `entities/`) has segments: `ui/ | model/ | api/ | lib/ 
 - No `any`. Use `unknown` + type guard.
 - Always define API response types.
 - Minimize non-null assertion (!). Use type guards instead.
+
+## Required Skill: vercel-react-best-practices
+
+When writing, reviewing, or refactoring React/Next.js code, **always apply `/vercel-react-best-practices`**.
+
+This skill covers 68 rules across 8 categories (waterfalls, bundle size, SSR, re-renders, etc.).
+Priority order: CRITICAL → HIGH → MEDIUM → LOW.
+
+**If the skill is not installed:**
+```bash
+npx @anthropic-ai/claude-code skills install vercel-labs/agent-skills
+```
+Then verify it appears in `.claude/skills/vercel-react-best-practices/`.
+Do not proceed with React work until the skill is available.
