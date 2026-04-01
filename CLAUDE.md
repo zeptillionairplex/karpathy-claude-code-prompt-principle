@@ -20,7 +20,6 @@
 - Match existing style, even if you'd do it differently.
 - If you find unrelated dead code, mention it — don't delete it.
 - Only remove imports/variables/functions that YOUR changes made unused.
-- Test: every changed line must trace directly to the user's request.
 
 ### 4. Goal-Driven Execution
 - Transform tasks into verifiable goals.
@@ -30,69 +29,29 @@
 
 ## Architecture: CNA (Context-Native Architecture)
 
-### Core Principles
-1. Context Boundary = Folder Boundary
-   - Everything needed for one task lives in one folder.
-   - No cross-folder jumping required to complete a single feature.
-
-2. Self-Describing Node
-   - Every domain folder has a _NODE.md.
-   - An agent reads this one file to understand the folder's purpose,
-     public API, dependencies, file map, and constraints.
-
-3. Minimum Read Principle
-   - See Context Strategy section below for details.
-
-4. One-Way Dependency + Contract
-   - Lower modules don't know about higher modules.
-   - Cross-module connections go through the entry point (public API) only.
-   - Modifying one module never requires reading another module's internals.
-
-5. Agent Hint Files
-   - _NODE.md = domain-level abstract (what, why, where)
-   - Entry point file = public interface (e.g. index.ts, handler.go, __init__.py)
-   - These two files are the only entry points for understanding a folder.
-
-### Folder Structure Convention
-→ See `/new-domain` skill for details.
-
-### Dependency & Domain Rules
-→ Dependency rules, domain creation criteria, cross-cutting → See `/new-domain` skill.
-
-## Context Strategy
-
-### Minimum Read Principle
-- If a _NODE.md exists in the target area, read it first.
-- If no _NODE.md, only ls the relevant folder.
-- Never ls or read unrelated folders.
+- Context Boundary = Folder Boundary: everything needed for one task lives in one folder.
+- Self-Describing Node: every domain folder has a `_NODE.md`.
+- Minimum Read Principle: read `_NODE.md` first, never explore unrelated folders.
+- One-Way Dependency: pages → domains → shared. Never reverse.
 - If exploration requires 4+ tool calls, stop and reconsider strategy.
 
-### _NODE.md Rules
-→ See `/explore` skill for update rules.
+→ See `.claude/rules/` for domain-specific rules.
+→ See `.claude/skills/` for detailed procedures.
 
 ## Available Skills
 
 | Skill | Purpose |
-|-------|--------|
+|-------|---------|
 | `/explore` | Identify target area and load minimal context |
 | `/implement` | Build or modify a feature |
-| `/new-domain` | Create a new domain/module (usage: `/new-domain payment`) |
+| `/new-domain` | Create a new domain/module |
 | `/fix-bug` | Fix a bug with minimal changes |
 | `/refactor` | Refactor existing code while preserving behavior |
-| `/verify-implementation` | Sequentially executes all verify skills to generate an integrated verification report |
-| `/manage-skills` | Analyzes session changes, creates/updates verification skills, and manages CLAUDE.md |
-| `/installing-essential-skills` | Install and manage recommended community agent skills (Superpowers, Context7, SOLID, etc.) |
+| `/verify-implementation` | Run all verify-* skills and generate report |
+| `/manage-skills` | Detect drift, create/update verify-* skills |
+| `/installing-essential-skills` | Guide for installing community skills |
 
-## Evolution Rules for This File
-- Add rules when recurring mistakes or patterns are discovered.
-- Keep this file concise. Detailed procedures go in skills.
-- Project-specific rules go in the section below.
-
-## Project-Specific Rules (fill in as you develop)
-<!-- Examples:
-- React functional components + hooks only
-- Zustand for state management, one store per domain
-- Tailwind CSS
-- Conventional Commits format
-- API endpoints under /wp-json/myplugin/v1/
--->
+## Evolution Rules
+- Add rules only when recurring mistakes are discovered.
+- Keep this file under 80 lines. Details go in `.claude/rules/` or skills.
+- Project-specific rules go in `.claude/rules/`.
