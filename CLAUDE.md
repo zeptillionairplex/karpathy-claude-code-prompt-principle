@@ -27,13 +27,35 @@
 - "Add feature" → "Define success criteria → write tests → make them pass"
 - For multi-step tasks, state a brief plan with verification for each step.
 
-## Architecture: CNA (Context-Native Architecture)
+## Architecture
 
-- Context Boundary = Folder Boundary: everything needed for one task lives in one folder.
-- Self-Describing Node: every domain folder has a `_NODE.md`.
-- Minimum Read Principle: read `_NODE.md` first, never explore unrelated folders.
-- One-Way Dependency: pages → domains → shared. Never reverse.
-- If exploration requires 4+ tool calls, stop and reconsider strategy.
+### Context Boundary Principle
+Every folder is a self-contained context boundary. One feature = one folder. All related code lives there.
+A contributor (human or AI) working on a feature MUST NOT need to read unrelated folders.
+
+### Frontend: Feature-Sliced Design (FSD)
+```
+app → pages → widgets → features → entities → shared
+```
+Dependency flows downward only. Each slice exports only via `index.ts`.
+→ See `.claude/rules/react.md` for layer rules.
+
+### Backend: Clean Architecture
+```
+infrastructure → interfaces → use_cases → entities
+```
+Dependency points inward (toward domain). Interfaces injected, never concrete.
+→ See `.claude/rules/go.md` or `.claude/rules/python.md` for layer rules.
+
+### Self-Describing Folders
+Every domain/feature folder has a `CLAUDE.md` (auto-loaded by Claude Code).
+Claude Code loads the `CLAUDE.md` hierarchy automatically — no manual exploration needed.
+→ Run `/evolving-docs` to create or update a folder's `CLAUDE.md`.
+
+### Navigation Rules
+- Read the folder's `CLAUDE.md` first. Never explore unrelated folders.
+- If exploration requires 4+ tool calls without a `CLAUDE.md` to guide you, stop and ask.
+- One-way dependency: higher layers import lower. Never reverse.
 
 → See `.claude/rules/` for domain-specific rules.
 → See `.claude/skills/` for detailed procedures.
@@ -47,6 +69,7 @@
 | `/new-domain` | Create a new domain/module |
 | `/fix-bug` | Fix a bug with minimal changes |
 | `/refactor` | Refactor existing code while preserving behavior |
+| `/evolving-docs` | Create or update CLAUDE.md in a domain folder |
 | `/verify-implementation` | Run all verify-* skills and generate report |
 | `/manage-skills` | Detect drift, create/update verify-* skills |
 | `/installing-essential-skills` | Guide for installing community skills |

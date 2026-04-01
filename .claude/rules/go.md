@@ -3,11 +3,26 @@ globs: "**/*.go"
 ---
 # Go / Gin Rules
 
-## Layer Structure
-- handler → service → repository. No reverse direction.
-- handler: HTTP parsing, validation, response serialization only.
-- service: business logic only. No direct DB access.
-- repository: DB queries only. No business logic.
+## Architecture: Clean Architecture
+
+Dependency direction — outer layers depend on inner, never reverse:
+```
+infrastructure → interfaces/adapters → use_cases → entities
+```
+
+| Layer | Maps to | Role |
+|-------|---------|------|
+| `entities/` | domain models | Pure business types and rules. Zero external deps. |
+| `use_cases/` | service | Application logic orchestrating entities. No DB/HTTP deps. |
+| `interfaces/` | handler | HTTP/gRPC/CLI — translate requests ↔ use cases. |
+| `infrastructure/` | repository | DB, cache, external APIs, message queues. |
+
+**Rules:**
+- `entities/` must have zero imports from other internal layers.
+- `use_cases/` receives dependencies via interface injection, never concrete types.
+- `interfaces/` (handler): HTTP parsing, validation, response serialization only.
+- `infrastructure/` (repository): DB queries only. No business logic.
+- Each domain folder MUST have a `CLAUDE.md` listing its layer, purpose, and files.
 
 ## Error Handling
 - Propagate errors upward. Log only at handler layer.
