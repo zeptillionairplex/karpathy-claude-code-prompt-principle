@@ -48,17 +48,11 @@ When writing, reviewing, or refactoring Go code, **always apply these skills:**
 
 | Situation | Skill |
 |-----------|-------|
-| Any Go code | `/golang-project-layout`, `/golang-error-handling`, `/golang-code-style` |
-| DB / repository layer | `/golang-database` + `/supabase-postgres-best-practices` |
-| Concurrency / goroutines | `/golang-concurrency`, `/golang-context` |
-| Tests | `/golang-testing`, `/golang-stretchr-testify` |
-| Security | `/golang-security` |
-| Observability | `/golang-observability` |
-| gRPC | `/golang-grpc` |
-| Performance | `/golang-performance`, `/golang-benchmark` |
+| Any Go code | `/golang-best-practices` |
+| DB / repository layer | `/golang-best-practices` + `/supabase-postgres-best-practices` |
 
 **If skills are not installed:**
 ```bash
-npx skills add samber/cc-skills-golang --all -y -a claude-code
 npx skills add supabase/agent-skills -y -a claude-code
 ```
+(`golang-best-practices` is a local skill in `.claude/skills/` — no install needed.)
