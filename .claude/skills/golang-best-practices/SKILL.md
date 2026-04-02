@@ -26,11 +26,12 @@ Reference these guidelines when:
 | 1 | Project Layout & Architecture | CRITICAL | `references/architecture.md` |
 | 2 | Error Handling | CRITICAL | `references/error-handling.md` |
 | 3 | Database & Transactions | CRITICAL | `references/database.md` |
-| 4 | Testing | HIGH | `references/testing.md` |
-| 5 | Security | HIGH | `references/security.md` |
-| 6 | Concurrency & Context | MEDIUM-HIGH | `references/concurrency.md` |
-| 7 | Observability | MEDIUM | `references/observability.md` |
-| 8 | Code Style & Naming | LOW-MEDIUM | `references/code-style.md` |
+| 4 | Gin HTTP Framework | HIGH | `references/gin.md` |
+| 5 | Testing | HIGH | `references/testing.md` |
+| 6 | Security | HIGH | `references/security.md` |
+| 7 | Concurrency & Context | MEDIUM-HIGH | `references/concurrency.md` |
+| 8 | Observability | MEDIUM | `references/observability.md` |
+| 9 | Code Style & Naming | LOW-MEDIUM | `references/code-style.md` |
 
 ## Quick Reference
 
@@ -54,7 +55,16 @@ Reference these guidelines when:
 - `db-connection-pool` — configure `SetMaxOpenConns`, `SetMaxIdleConns`, `SetConnMaxLifetime`
 - `db-context-first` — always pass `context.Context` to every DB call
 
-### 4. Testing (HIGH)
+### 4. Gin HTTP Framework (HIGH)
+- `gin-bind-should` — use `ShouldBindJSON`, never `BindJSON` (hijacks error handling)
+- `gin-error-centralize` — one `handleError` helper per handler struct; no repeated `switch err`
+- `gin-error-format` — always `{"error": "...", "code": "..."}` / `{"data": ..., "message": "ok"}`
+- `gin-middleware-next` — call `c.Next()` to pass through, `c.Abort()` to stop chain
+- `gin-ctx-request` — pass `c.Request.Context()` to services; never pass `*gin.Context` past handler
+- `gin-no-global` — use `gin.New()` + explicit middleware; never `gin.Default()` in production
+- `gin-router-group` — group routes by domain; apply auth middleware at group level
+
+### 5. Testing (HIGH)
 - `test-table-driven` — use table-driven tests for all non-trivial logic
 - `test-real-db` — DB layer tests use a real DB; no mocks for SQL
 - `test-testify` — use `github.com/stretchr/testify/assert` and `require`
@@ -97,6 +107,7 @@ Read individual reference files for detailed explanations and code examples:
 references/architecture.md
 references/error-handling.md
 references/database.md
+references/gin.md
 references/testing.md
 references/security.md
 references/concurrency.md
