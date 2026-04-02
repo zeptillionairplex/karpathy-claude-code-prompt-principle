@@ -71,6 +71,7 @@ Claude Code loads the `CLAUDE.md` hierarchy automatically — no manual explorat
 | `/refactor` | Refactor existing code while preserving behavior |
 | `/evolving-docs` | Create or update CLAUDE.md in a domain folder |
 | `/humanizer` | Remove AI writing patterns from any user-facing text |
+| `/ui-ux-pro-max` | UI/UX design intelligence — styles, color, typography, accessibility |
 | `/verify-implementation` | Run all verify-* skills and generate report |
 | `/manage-skills` | Detect drift, create/update verify-* skills |
 | `/installing-essential-skills` | Guide for installing community skills |
