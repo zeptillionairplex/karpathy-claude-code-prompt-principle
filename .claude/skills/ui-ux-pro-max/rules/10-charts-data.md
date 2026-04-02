@@ -1,0 +1,25 @@
+# Charts & Data (LOW)
+
+- `chart-type` — Match chart to data (trend → line, comparison → bar, proportion → pie/donut)
+- `color-guidance` — Accessible palettes; avoid red/green-only pairs for colorblind users
+- `data-table` — Provide table alternative; charts alone aren't screen-reader friendly
+- `pattern-texture` — Supplement color with patterns/shapes for distinguishability
+- `legend-visible` — Always show legend; position near chart, not below a scroll fold
+- `tooltip-on-interact` — Tooltips on hover (Web) or tap (mobile) with exact values
+- `axis-labels` — Label axes with units; avoid truncated or rotated labels on mobile
+- `responsive-chart` — Charts reflow on small screens (e.g. horizontal bar, fewer ticks)
+- `empty-data-state` — Meaningful empty state when no data; not a blank chart
+- `loading-chart` — Skeleton/shimmer while chart loads; not an empty axis frame
+- `animation-optional` — Chart animations respect prefers-reduced-motion
+- `large-dataset` — For 1000+ points, aggregate or sample; drill-down for detail
+- `number-formatting` — Locale-aware formatting for numbers, dates, currencies
+- `touch-target-chart` — Interactive chart elements ≥44pt tap area
+- `no-pie-overuse` — Avoid pie/donut for >5 categories; use bar chart
+- `contrast-data` — Data lines/bars vs background ≥3:1; data text labels ≥4.5:1
+- `legend-interactive` — Legends clickable to toggle series visibility
+- `direct-labeling` — For small datasets, label values directly on the chart
+- `tooltip-keyboard` — Tooltip content keyboard-reachable; not hover-only
+- `sortable-table` — Data tables support sorting with aria-sort
+- `gridline-subtle` — Grid lines low-contrast (e.g. gray-200); don't compete with data
+- `screen-reader-summary` — aria-label describing the chart's key insight for screen readers
+- `error-state-chart` — Data load failure shows error + retry; not a broken/empty chart

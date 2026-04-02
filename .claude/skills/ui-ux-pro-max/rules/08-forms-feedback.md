@@ -1,0 +1,26 @@
+# Forms & Feedback (MEDIUM)
+
+- `input-labels` — Visible label per input; never placeholder-only
+- `error-placement` — Show error below the related field
+- `submit-feedback` — Loading → success/error state on submit
+- `required-indicators` — Mark required fields (asterisk)
+- `empty-states` — Helpful message and action when no content
+- `toast-dismiss` — Auto-dismiss toasts in 3–5s
+- `confirmation-dialogs` — Confirm before destructive actions
+- `input-helper-text` — Persistent helper text below complex inputs
+- `disabled-states` — Reduced opacity (0.38–0.5) + cursor change + semantic attribute
+- `progressive-disclosure` — Reveal complex options progressively; don't overwhelm upfront
+- `inline-validation` — Validate on blur; show error only after user finishes input
+- `input-type-keyboard` — Semantic input types (email, tel, number) for correct mobile keyboard
+- `password-toggle` — Show/hide toggle for password fields
+- `autofill-support` — `autocomplete` / `textContentType` for system autofill
+- `undo-support` — Allow undo for destructive or bulk actions
+- `success-feedback` — Confirm completed actions (checkmark, toast, color flash)
+- `error-recovery` — Error messages include a clear recovery path (retry, edit, help link)
+- `multi-step-progress` — Step indicator or progress bar; allow back navigation
+- `form-autosave` — Long forms auto-save drafts to prevent data loss
+- `sheet-dismiss-confirm` — Confirm before dismissing sheet/modal with unsaved changes
+- `error-clarity` — State cause + how to fix; not just "Invalid input"
+- `focus-management` — After submit error, auto-focus the first invalid field
+- `touch-friendly-input` — Mobile input height ≥44px
+- `destructive-emphasis` — Destructive actions use red and are visually separated
