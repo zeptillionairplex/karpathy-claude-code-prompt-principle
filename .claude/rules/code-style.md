@@ -11,6 +11,11 @@
 - Conventional Commits: `type(scope): message`
 - Types: feat, fix, refactor, test, docs, chore
 
+## Documentation Writing
+- Always apply `/humanizer` when writing or editing any user-facing text:
+  CLAUDE.md files, PR descriptions, README, comments intended for humans.
+- Do not apply to inline code comments that describe logic.
+
 ## General
 - Single responsibility per function. Split if over 20 lines.
 - No magic numbers — extract to named constants.
