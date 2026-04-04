@@ -11,3 +11,6 @@
 | `/humanizer` | Remove AI writing patterns from any user-facing text |
 | `/ui-ux-pro-max` | UI/UX design intelligence — styles, color, typography, accessibility |
 | `/installing-essential-skills` | Guide for installing community skills |
+| `/power-stack` | Full dev lifecycle orchestrator: gstack→GSD→Superpowers TDD→gstack QA |
+| `/gsd` | Project management: milestone planning, phase execution, context protection |
+| `/gstack` | Browser QA testing, multi-persona reviews, code verification via Codex |
