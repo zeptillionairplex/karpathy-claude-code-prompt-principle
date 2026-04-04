@@ -1,0 +1,21 @@
+# Animation (MEDIUM)
+
+- `duration-timing` — 150–300ms for micro-interactions; complex ≤400ms; avoid >500ms
+- `transform-performance` — Animate transform/opacity only; never width/height/top/left
+- `loading-states` — Skeleton or progress indicator when loading >300ms
+- `excessive-motion` — Animate 1–2 key elements per view max
+- `easing` — ease-out for entering, ease-in for exiting; no linear for UI transitions
+- `motion-meaning` — Every animation expresses cause-effect; not purely decorative
+- `state-transition` — Hover/active/expanded/collapsed states animate smoothly, not snap
+- `continuity` — Page transitions maintain spatial continuity (shared element, directional slide)
+- `parallax-subtle` — Respect reduced-motion; don't cause disorientation
+- `spring-physics` — Spring/physics-based curves for natural feel
+- `exit-faster-than-enter` — Exit animations ~60–70% of enter duration
+- `stagger-sequence` — Stagger list/grid entrance by 30–50ms per item
+- `shared-element-transition` — Hero transitions for visual continuity between screens
+- `interruptible` — Animations must be interruptible by user tap/gesture immediately
+- `no-blocking-animation` — Never block user input during animation
+- `scale-feedback` — Subtle scale (0.95–1.05) on press for tappable cards/buttons
+- `modal-motion` — Modals/sheets animate from trigger source (scale+fade or slide-in)
+- `navigation-direction` — Forward: left/up; Backward: right/down — consistent logic
+- `layout-shift-avoid` — Animations must not cause CLS; use transform for position changes

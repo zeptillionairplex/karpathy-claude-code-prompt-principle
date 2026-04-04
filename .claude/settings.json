@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(npx skills *)",
+            "command": "python .claude/scripts/sync-skills.py 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Syncing skills registry...",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

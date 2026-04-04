@@ -47,16 +47,19 @@ Each slice (`features/`, `entities/`) has segments: `ui/ | model/ | api/ | lib/ 
 - Always define API response types.
 - Minimize non-null assertion (!). Use type guards instead.
 
-## Required Skill: vercel-react-best-practices
+## Required Skills
 
-When writing, reviewing, or refactoring React/Next.js code, **always apply `/vercel-react-best-practices`**.
+| Situation | Skill |
+|-----------|-------|
+| Any React/Next.js code | `/vercel-react-best-practices` |
+| UI components, pages, design decisions | `/ui-ux-pro-max` |
 
-This skill covers 68 rules across 8 categories (waterfalls, bundle size, SSR, re-renders, etc.).
-Priority order: CRITICAL → HIGH → MEDIUM → LOW.
+**vercel-react-best-practices** covers 68 rules across 8 categories (waterfalls, bundle size, SSR, re-renders, etc.). Priority order: CRITICAL → HIGH → MEDIUM → LOW.
 
-**If the skill is not installed:**
+**ui-ux-pro-max** covers accessibility, touch targets, color, typography, animation, responsive layout, and 50+ styles. Apply when the task changes how something looks, feels, moves, or is interacted with.
+
+**If skills are not installed:**
 ```bash
-npx @anthropic-ai/claude-code skills install vercel-labs/agent-skills
+npx skills add nextlevelbuilder/ui-ux-pro-max-skill -y -a claude-code --skill ui-ux-pro-max
+npx skills add vercel-labs/agent-skills -y -a claude-code
 ```
-Then verify it appears in `.claude/skills/vercel-react-best-practices/`.
-Do not proceed with React work until the skill is available.

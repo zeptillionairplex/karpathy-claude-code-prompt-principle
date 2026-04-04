@@ -1,0 +1,24 @@
+# Navigation Patterns (HIGH)
+
+- `bottom-nav-limit` — Bottom nav max 5 items; icons + labels required
+- `drawer-usage` — Drawer/sidebar for secondary navigation, not primary actions
+- `back-behavior` — Back navigation predictable and consistent; preserve scroll/state
+- `deep-linking` — All key screens reachable via deep link / URL
+- `tab-bar-ios` — iOS: bottom Tab Bar for top-level navigation (Apple HIG)
+- `top-app-bar-android` — Android: Top App Bar with nav icon (Material)
+- `nav-label-icon` — Navigation items must have both icon and text label
+- `nav-state-active` — Current location highlighted (color, weight, indicator)
+- `nav-hierarchy` — Primary nav (tabs/bottom) vs secondary nav (drawer) clearly separated
+- `modal-escape` — Modals/sheets offer clear close affordance; swipe-down on mobile
+- `search-accessible` — Search easily reachable (top bar or tab)
+- `breadcrumb-web` — Web: breadcrumbs for 3+ level deep hierarchies
+- `state-preservation` — Back navigation restores scroll position, filter state, and input
+- `gesture-nav-support` — Support iOS swipe-back and Android predictive back without conflict
+- `bottom-nav-top-level` — Bottom nav for top-level screens only; never nest sub-nav inside
+- `adaptive-navigation` — ≥1024px: sidebar; small screens: bottom/top nav
+- `back-stack-integrity` — Never silently reset the nav stack or jump to home unexpectedly
+- `navigation-consistency` — Nav placement stays the same across all pages
+- `avoid-mixed-patterns` — Don't mix Tab + Sidebar + Bottom Nav at the same hierarchy level
+- `modal-vs-navigation` — Modals must not be used for primary navigation flows
+- `focus-on-route-change` — After page transition, move focus to main content (WCAG)
+- `persistent-nav` — Core navigation reachable from deep pages; don't hide in sub-flows
