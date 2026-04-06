@@ -33,6 +33,22 @@ Glob, Grep, and Read are only permitted when QMD results are insufficient.
 - Viewing several related files at once: use `multi_get`
 - Fall back to Grep/Glob/Read only when QMD results are insufficient
 
+## Worktree Search Strategy
+
+When working inside a git worktree (PWD contains `.git` as a file, not a directory):
+
+| What you're searching for | Use |
+|---------------------------|-----|
+| Existing codebase location (unchanged files) | QMD (worktree collection registered automatically) |
+| Files you modified or created in this worktree | Grep / Read (QMD index may lag) |
+| Diff vs original branch | Grep / Read only |
+
+Worktrees are registered as `worktree-<dirname>` collections via hook (BM25 only, no vector search).
+If a worktree collection is missing, run manually:
+```bash
+python .claude/scripts/qmd-worktree-sync.py
+```
+
 ## Index Maintenance
 
 After major file structure changes:

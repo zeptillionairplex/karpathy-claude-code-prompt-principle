@@ -1,11 +1,18 @@
 # CLAUDE.md
 
-→ QMD search rules + setup: `.claude/rules/qmd.md` — if QMD MCP is not connected, follow the Setup section there before doing anything else.
-→ What NOT to read (context hygiene): `.claude/rules/context-hygiene.md`
-→ Behavioral principles: `.claude/rules/behavior.md`
-→ Architecture rules: `.claude/rules/architecture.md`
-→ Available skills: `.claude/rules/skills.md`
-→ Domain-specific rules: `.claude/rules/`
+## Search Priority
+If QMD MCP is connected (`mcp__qmd__*` tools available): always use QMD query/get before Glob/Grep/Read.
+If QMD is not connected: follow the Setup section in `.claude/rules/qmd.md` before doing anything else.
+
+## Domain Rules (read when relevant)
+→ Architecture:  `.claude/rules/architecture.md`
+→ React/TS:      `docs/rules/react.md`
+→ Go:            `docs/rules/go.md`
+→ Python:        `docs/rules/python.md`
+→ Database:      `docs/rules/database.md`
+→ Testing:       `docs/rules/testing.md`
+→ Code style:    `docs/rules/code-style.md`
+→ Docker:        `docs/rules/docker.md`
 
 ## Evolution Rules
 - Add rules only when recurring mistakes are discovered.
