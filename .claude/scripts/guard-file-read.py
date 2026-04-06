@@ -31,6 +31,8 @@ FORBIDDEN = [
     (r'(^|[\\/])\.git[\\/]',      ".git internals — use git commands instead"),
     (r'\.DS_Store$',              "macOS metadata"),
     (r'Thumbs\.db$',              "Windows thumbnail cache"),
+    (r'(^|[\\/])\.(idea|vscode)[\\/]', ".idea/.vscode — editor config, not code"),
+    (r'\.(log|tmp|swp)$',         "temp/log file — no value in context"),
     # Generated / binary
     (r'\bcoverage[\\/]',          "coverage report — run tests to regenerate"),
     (r'\.nyc_output[\\/]',        "coverage output"),

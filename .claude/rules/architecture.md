@@ -16,7 +16,7 @@ Dependency flows downward only. Each slice exports only via `index.ts`.
 infrastructure → interfaces → use_cases → entities
 ```
 Dependency points inward (toward domain). Interfaces injected, never concrete.
-→ See docs/rules/go.md or docs/rules/python.md for layer rules.
+→ See `docs/rules/go.md` or `docs/rules/python.md` for layer rules.
 
 ## Self-Describing Folders
 Every domain/feature folder has a `CLAUDE.md` (auto-loaded by Claude Code).

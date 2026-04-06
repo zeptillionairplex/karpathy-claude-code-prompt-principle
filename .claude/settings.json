@@ -22,6 +22,16 @@
         ]
       },
       {
+        "matcher": "Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/guard-file-read.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
           {
