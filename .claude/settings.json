@@ -114,6 +114,12 @@
             "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/context-monitor.py\"",
             "timeout": 15,
             "async": true
+          },
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/doc-guardian.py\"",
+            "timeout": 20,
+            "async": true
           }
         ]
       }

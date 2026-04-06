@@ -9,18 +9,19 @@ A contributor (human or AI) working on a feature MUST NOT need to read unrelated
 app → pages → widgets → features → entities → shared
 ```
 Dependency flows downward only. Each slice exports only via `index.ts`.
-→ See `.claude/rules/react.md` for layer rules.
+→ See docs/rules/react.md for layer rules.
 
 ## Backend: Clean Architecture
 ```
 infrastructure → interfaces → use_cases → entities
 ```
 Dependency points inward (toward domain). Interfaces injected, never concrete.
-→ See `.claude/rules/go.md` or `.claude/rules/python.md` for layer rules.
+→ See docs/rules/go.md or docs/rules/python.md for layer rules.
 
 ## Self-Describing Folders
 Every domain/feature folder has a `CLAUDE.md` (auto-loaded by Claude Code).
 → Run `/evolving-docs` to create or update a folder's `CLAUDE.md`.
+→ **Automated:** `doc-guardian.py` (Stop hook) detects missing/stale `CLAUDE.md` after each session and prompts you to run `/evolving-docs`.
 
 ## Navigation Rules
 - Read the folder's `CLAUDE.md` first. Never explore unrelated folders.
