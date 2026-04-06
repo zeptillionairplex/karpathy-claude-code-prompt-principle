@@ -11,9 +11,9 @@ If QMD is not connected: follow the Setup section in `.claude/rules/qmd.md` befo
 → Python:        `docs/rules/python.md`
 → Database:      `docs/rules/database.md`
 → Testing:       `docs/rules/testing.md`
-→ Code style:    `docs/rules/code-style.md`
+→ Code style:    `.claude/rules/code-style.md`
 → Docker:        `docs/rules/docker.md`
 
 ## Evolution Rules
 - Add rules only when recurring mistakes are discovered.
-- Details go in `.claude/rules/` or skills. Keep this file minimal.
+- Details go in `.claude/rules/`, `docs/rules/`, or skills. Keep this file minimal.
