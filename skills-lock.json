@@ -181,6 +181,21 @@
       "sourceType": "github",
       "computedHash": "8b2657bbbe98d947d8f41b739b859e8e8f11615368391a326d3f2bf9b600547d"
     },
+    "gsd": {
+      "source": "ctsstc/get-shit-done-skills",
+      "sourceType": "github",
+      "computedHash": "680208c668bd9ce5135c2b6b21c200406ef04a45450b3246adb3a573f11ab40c"
+    },
+    "gstack": {
+      "source": "garrytan/gstack",
+      "sourceType": "github",
+      "computedHash": "966c618596c2db282c556de544d3974476a06b203ca6a6a78f937eb270d6acb2"
+    },
+    "humanizer": {
+      "source": "blader/humanizer",
+      "sourceType": "github",
+      "computedHash": "72c839bc19c593fbdec017c81f0243578e85bbc4d109c3fac15e5c4ff39fb3da"
+    },
     "n8n-workflow-patterns": {
       "source": "czlonkowski/n8n-skills",
       "sourceType": "github",
@@ -195,6 +210,11 @@
       "source": "supabase/agent-skills",
       "sourceType": "github",
       "computedHash": "e3ba3d760c5f4cc43b02a91fb8924f726c7818f95cc35d79d0a606ca622b72f5"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
     },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",

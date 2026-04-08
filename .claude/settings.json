@@ -1,0 +1,155 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/guard-file-read.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/guard-file-read.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/guard-file-read.py\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/guard-bash.py\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/bash-output-limiter.py\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "python .claude/scripts/guard-golang-best-practices.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/skill-hook-analyzer.py\" 2>/dev/null || true",
+            "timeout": 180,
+            "statusMessage": "Checking skill for hookable patterns...",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/skill-hook-analyzer.py\" 2>/dev/null || true",
+            "timeout": 180,
+            "statusMessage": "Checking skill for hookable patterns...",
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(npx skills *)",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/skill-hook-analyzer.py\" 2>/dev/null || true",
+            "timeout": 600,
+            "statusMessage": "Analyzing new skills for hookable patterns...",
+            "async": true
+          },
+          {
+            "type": "command",
+            "if": "Bash(npx skills *)",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/sync-skills.py\" 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Syncing skills registry...",
+            "async": true
+          },
+          {
+            "type": "command",
+            "if": "Bash(git worktree add*)",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/qmd-worktree-sync.py\" 2>/dev/null || true",
+            "timeout": 90,
+            "statusMessage": "Registering worktree with QMD...",
+            "async": true
+          },
+          {
+            "type": "command",
+            "if": "Bash(git worktree remove*)",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/qmd-worktree-sync.py\" 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "Removing worktree from QMD...",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/notify.py\"",
+            "timeout": 15,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/context-monitor.py\"",
+            "timeout": 15,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/doc-guardian.py\"",
+            "timeout": 20,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/notify.py\"",
+            "timeout": 15,
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(git reset:*)",
+      "Bash(rm -rf features/)",
+      "Bash(python .claude/scripts/doc-guardian.py)",
+      "Bash(echo \"✓ Exit code: $?\")",
+      "Bash(mkdir -p features/auth)",
+      "Bash(touch features/auth/api.ts)",
+      "Bash(git add:*)"
     ]
   }
 }
