@@ -47,6 +47,7 @@ That's it. `/setup` checks your environment, installs all plugins and CLI tools,
 │   │   ├── code-style.md        # Naming, commits, documentation
 │   │   ├── codex.md             # Codex verification — when and how
 │   │   ├── context-hygiene.md   # What NOT to read (node_modules, etc.)
+│   │   ├── context-management.md # /clear vs /compact — when to use each
 │   │   └── qmd.md               # QMD search rules and setup
 │   ├── skills/                  # Custom slash commands
 │   │   ├── setup/               # /setup — environment installer
@@ -81,6 +82,7 @@ Key rules:
 | `behavior.md` | Karpathy's 4 principles — the foundation of every decision |
 | `codex.md` | When to run Codex, how to classify findings, what to do with them |
 | `context-hygiene.md` | Explicit list of paths Claude must never load (node_modules, dist, etc.) |
+| `context-management.md` | `/clear` vs `/compact` — when each is appropriate, what's forbidden |
 | `qmd.md` | QMD search-first discipline — Glob/Grep only as fallback |
 
 ### Layer 2 — Skills (`.claude/skills/`)
@@ -111,7 +113,7 @@ Hooks run Python scripts automatically on Claude Code events. They enforce rules
 | `PostToolUse(Write/Edit)` | `skill-hook-analyzer.py` | Suggests hooks when new skills are added |
 | `PostToolUse(Bash: git worktree)` | `qmd-worktree-sync.py` | Keeps QMD index in sync with worktrees |
 | `Stop` | `doc-guardian.py` | Detects missing/stale `CLAUDE.md` at session end |
-| `Stop` | `context-monitor.py` | Warns if context exceeded 50% threshold |
+| `Stop` | `context-monitor.py` | Warns at 60% (consider `/compact`) and 80% (urgent: `/clear` or `/compact`) |
 
 ### Layer 4 — Dual-Model Verification
 

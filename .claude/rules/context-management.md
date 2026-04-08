@@ -2,31 +2,31 @@
 
 ## The Rule
 
-| 상황 | 명령어 |
+| Situation | Command |
 |---|---|
-| 현재 작업이 완전히 끝나고 다른 작업으로 넘어갈 때 | `/clear` |
-| 작업 중간 마일스톤 — 리서치 끝내고 구현 시작 전, 디버깅 끝내고 다음 기능 전 | `/compact` |
-| **절대 금지** 구현 도중 (변수명, 파일 경로, 부분 상태 유실) | ❌ `/compact` 금지 |
+| Current task is fully done, moving to a different task | `/clear` |
+| Mid-task milestone — research done before implementation, debugging done before next feature | `/compact` |
+| **Never** mid-implementation (loses variable names, file paths, partial state) | ❌ `/compact` banned |
 
 ## Why
 
-긴 세션에서 컨텍스트가 누적되면 Claude 성능이 저하된다 (Context Rot):
-- 오래된 지시문과 새 지시문이 충돌
-- 작업과 무관한 파일 내용이 주의를 분산
-- 토큰 예산이 줄어 중요한 정보를 놓침
+Context accumulation degrades Claude performance over long sessions (Context Rot):
+- Old instructions conflict with new ones
+- Unrelated file contents dilute attention
+- Token budget shrinks, causing important information to be missed
 
 ## /clear
-- 컨텍스트를 완전히 초기화
-- 무료, 즉시 실행
-- 이전 작업 내용을 완전히 잊음 — 새 작업에만 적합
+- Wipes context completely
+- Free, instant
+- Forgets everything — only appropriate when switching to a new task
 
 ## /compact
-- 현재 컨텍스트를 요약해서 압축
-- 중요한 맥락(변수명, 파일 경로, 진행 상태)을 유지
-- 마일스톤 사이에서만 사용
+- Summarizes and compresses current context
+- Preserves key state (variable names, file paths, progress)
+- Use only at milestones between distinct work phases
 
 ## Signal: When to Act
 
-context-monitor hook이 컨텍스트 사용량을 감지하여 알림을 보낸다:
-- **60%** → `/compact` 고려 (마일스톤이면 지금이 적기)
-- **80%** → 즉시 `/clear` 또는 `/compact` 실행 필요
+The `context-monitor` Stop hook detects usage and fires a desktop notification:
+- **60%** → Consider `/compact` (if you're at a milestone, now is the time)
+- **80%** → Run `/clear` or `/compact` immediately
