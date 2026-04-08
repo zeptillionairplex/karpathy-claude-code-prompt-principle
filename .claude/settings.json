@@ -43,6 +43,11 @@
             "type": "command",
             "command": "python \"$(git rev-parse --show-toplevel)/.claude/scripts/bash-output-limiter.py\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "python .claude/scripts/guard-golang-best-practices.py",
+            "timeout": 10
           }
         ]
       }
