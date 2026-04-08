@@ -13,6 +13,7 @@ If QMD is not connected: follow the Setup section in `.claude/rules/qmd.md` befo
 → Testing:       `docs/rules/testing.md`
 → Code style:    `docs/rules/code-style.md`
 → Docker:        `docs/rules/docker.md`
+→ Authorization: `docs/rules/authorization.md`
 → Codex verify:  `.claude/rules/codex.md`
 
 ## Evolution Rules

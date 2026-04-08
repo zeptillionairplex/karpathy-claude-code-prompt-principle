@@ -68,6 +68,7 @@ That's it. `/setup` checks your environment, installs all plugins and CLI tools,
 │       └── notify.py            # Session-end desktop notification
 └── docs/
     └── rules/                   # Domain-specific rules (React, Go, Python, etc.)
+        ├── authorization.md     # RBAC / ReBAC / ABAC — model selection, schemas, prompts
 ```
 
 ## How It Works
@@ -84,6 +85,7 @@ Key rules:
 | `context-hygiene.md` | Explicit list of paths Claude must never load (node_modules, dist, etc.) |
 | `context-management.md` | `/clear` vs `/compact` — when each is appropriate, what's forbidden |
 | `qmd.md` | QMD search-first discipline — Glob/Grep only as fallback |
+| `docs/rules/authorization.md` | RBAC / ReBAC / ABAC — model selection, schemas, middleware, prompts |
 
 ### Layer 2 — Skills (`.claude/skills/`)
 
