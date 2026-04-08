@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Stop hook: Windows 알림 — 컨텍스트 60% 도달 시 1회 경고.
+Stop hook: Windows 알림 — 컨텍스트 사용량에 따라 /clear vs /compact 안내.
 
 원리:
   - Stop hook stdin에서 transcript_path 수신
   - JSONL 트랜스크립트 파일의 문자 수로 토큰 추정
   - 고정 오버헤드(시스템 프롬프트 + 툴 + 스킬 + 메모리) 합산
-  - 120k(60%) 초과 시 알림 (세션당 1회)
+  - 60% → /compact 권고 알림 (세션당 1회)
+  - 80% → /clear 또는 /compact 긴급 알림 (세션당 1회)
 """
 import json
 import os
@@ -17,13 +18,13 @@ from pathlib import Path
 
 # ── 상수 ────────────────────────────────────────────────────────────────────
 
-CONTEXT_LIMIT   = 200_000
-THRESHOLD       = 0.60
-THRESHOLD_TOKENS = int(CONTEXT_LIMIT * THRESHOLD)   # 120_000
+CONTEXT_LIMIT    = 200_000
+THRESHOLD_WARN   = 0.60   # 120k — /compact 권고
+THRESHOLD_URGENT = 0.80   # 160k — /clear 또는 /compact 긴급
 
 # 고정 오버헤드: 시스템 프롬프트 + 툴 정의 + 스킬 메타데이터 + 메모리 파일
 # (/context 출력 기준: 6.4k + 6.7k + 2.6k + 5.4k ≈ 21k)
-FIXED_OVERHEAD  = 21_000
+FIXED_OVERHEAD   = 21_000
 
 STATE_FILE = Path(__file__).parent / ".context-monitor-state.json"
 MAX_STATE_AGE_DAYS = 3   # 오래된 세션 기록 자동 정리
@@ -115,19 +116,38 @@ def main() -> None:
     estimated = FIXED_OVERHEAD + transcript_tokens
     pct = estimated / CONTEXT_LIMIT * 100
 
-    # 세션 상태 확인 (이미 알린 세션은 스킵)
+    # 세션 상태 확인
     state = load_state()
-    session = state.get(session_id, {"notified": False, "ts": time.time()})
+    session = state.get(session_id, {"notified_warn": False, "notified_urgent": False, "ts": time.time()})
+    changed = False
 
-    if not session["notified"] and estimated >= THRESHOLD_TOKENS:
+    urgent_tokens = int(CONTEXT_LIMIT * THRESHOLD_URGENT)
+    warn_tokens   = int(CONTEXT_LIMIT * THRESHOLD_WARN)
+
+    if not session.get("notified_urgent") and estimated >= urgent_tokens:
+        notify(
+            "Claude Code — 컨텍스트 긴급 ⛔",
+            f"컨텍스트 {pct:.0f}% 사용 중 ({estimated:,} / {CONTEXT_LIMIT:,})\n"
+            "작업 완료 후 다음 작업이면 → /clear\n"
+            "현재 작업 계속이면 → /compact\n"
+            "⚠ 구현 도중 /compact 금지 (변수명·경로 유실)",
+        )
+        session["notified_urgent"] = True
+        session["notified_warn"]   = True
+        session["ts"] = time.time()
+        changed = True
+    elif not session.get("notified_warn") and estimated >= warn_tokens:
         notify(
             "Claude Code — 컨텍스트 경고 ⚠",
-            f"컨텍스트 {pct:.0f}% 사용 중\n"
-            f"({estimated:,} / {CONTEXT_LIMIT:,} tokens 추정)\n"
-            "세션 전환 또는 /compact 를 고려하세요.",
+            f"컨텍스트 {pct:.0f}% 사용 중 ({estimated:,} / {CONTEXT_LIMIT:,})\n"
+            "마일스톤(리서치→구현, 디버깅→다음 기능)이면 → /compact\n"
+            "다른 작업으로 넘어가면 → /clear",
         )
-        session["notified"] = True
+        session["notified_warn"] = True
         session["ts"] = time.time()
+        changed = True
+
+    if changed:
         state[session_id] = session
         save_state(state)
 
