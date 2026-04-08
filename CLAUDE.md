@@ -14,6 +14,9 @@ If QMD is not connected: follow the Setup section in `.claude/rules/qmd.md` befo
 → Code style:    `docs/rules/code-style.md`
 → Docker:        `docs/rules/docker.md`
 → Authorization: `docs/rules/authorization.md`
+→ Celery:        `docs/rules/celery.md`
+→ DI patterns:   `docs/rules/dependency-injection.md`
+→ Error handling: `docs/rules/error-handling.md`
 → Codex verify:  `.claude/rules/codex.md`
 
 ## Evolution Rules

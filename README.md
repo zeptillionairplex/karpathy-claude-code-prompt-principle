@@ -69,6 +69,9 @@ That's it. `/setup` checks your environment, installs all plugins and CLI tools,
 └── docs/
     └── rules/                   # Domain-specific rules (React, Go, Python, etc.)
         ├── authorization.md     # RBAC / ReBAC / ABAC — model selection, schemas, prompts
+        ├── celery.md            # Celery task patterns, FastAPI integration, scheduling
+        ├── dependency-injection.md # Go manual DI / Wire, Python FastAPI Depends
+        └── error-handling.md   # Domain errors, central middleware, unified response format
 ```
 
 ## How It Works
@@ -86,6 +89,9 @@ Key rules:
 | `context-management.md` | `/clear` vs `/compact` — when each is appropriate, what's forbidden |
 | `qmd.md` | QMD search-first discipline — Glob/Grep only as fallback |
 | `docs/rules/authorization.md` | RBAC / ReBAC / ABAC — model selection, schemas, middleware, prompts |
+| `docs/rules/celery.md` | Celery task patterns, FastAPI integration, Beat scheduling |
+| `docs/rules/dependency-injection.md` | Go manual DI / Wire, Python FastAPI Depends chaining |
+| `docs/rules/error-handling.md` | Domain errors, central middleware, unified response format |
 
 ### Layer 2 — Skills (`.claude/skills/`)
 
