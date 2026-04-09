@@ -1,14 +1,14 @@
 # Claude Code Prompt Principles v2
 
 Claude Code workspace setup based on Andrej Karpathy's four coding principles.
-OMC multi-agent orchestration + Superpowers TDD + triple-model verification.
+OMC multi-agent orchestration + local TDD skills + triple-model verification.
 
 ## What You Get
 
 - **OMC Multi-Agent** — 29 specialized agents, parallel execution, smart model routing (30–50% cost reduction)
-- **Superpowers TDD** — test first → implement → verify, strict execution loop
-- **Triple-Model Verification** — Claude (implementation) + Codex (review) + Gemini (UI/large-context analysis)
-- **Context Optimization** — 44% fixed overhead reduction vs v1 (21.5K → ~12K)
+- **Local TDD Skills** — test-driven-development, verification-before-completion, finishing-a-development-branch (built-in, no plugin required)
+- **Triple-Model Verification** — Claude (implementation) + Codex CLI (review) + Gemini (UI/large-context analysis)
+- **Context Optimization** — lean plugin footprint (~45 skills vs 68 in earlier setup)
 - **Karpathy's 4 Principles** — enforced via rules (Think / Simplicity / Surgical / Goal-Driven)
 - **QMD Semantic Search** — BM25 + vector search instead of Glob/Grep
 - **One-Command Setup** — `/setup` configures the full environment automatically
@@ -129,8 +129,12 @@ Optional skills (`optional/`) — `/setup` auto-detects project language and act
 | n8n config files | `optional/n8n/` |
 
 External skills (auto-installed by `/setup`):
-- **Superpowers** — TDD, parallel agents, plan writing, code review workflows
 - **oh-my-claudecode (OMC)** — 29 specialized agents, ultrawork, team, autopilot, and more
+
+Built-in local skills (included in this repo, no plugin required):
+- **test-driven-development** — strict TDD workflow (red → green → refactor)
+- **verification-before-completion** — evidence-first completion gate
+- **finishing-a-development-branch** — test → present 4 options → execute → cleanup
 
 ### Layer 3 — Hooks
 
@@ -166,13 +170,13 @@ oh-my-claudecode (OMC) coordinates specialized agents for each task type.
 | Model | Role |
 |-------|------|
 | Claude | Implementation · test writing |
-| Codex (OpenAI) | Independent diff review · security · logic errors |
+| Codex CLI (OpenAI) | Independent diff review · security · logic errors |
 | Gemini | UI/UX review · large-context analysis |
 
 ```bash
-# Codex review
+# Codex CLI review
 git diff HEAD~1 | codex "Review this diff for bugs, security issues, and logic errors."
-# Or: /codex:review
+# Or via OMC: ask codex / omc team 1:codex
 
 # Triple verification (CCG mode)
 /ccg "Review implemented feature"
@@ -206,7 +210,7 @@ deep-interview → omc-plan → ultrawork/team + TDD → codex:review → ultraq
 | Plan | `/oh-my-claudecode:deep-interview` | Socratic requirements clarification |
 | Architect | `/oh-my-claudecode:omc-plan --consensus` | Consensus-based plan |
 | Implement | `ultrawork` / `team N:executor` | TDD + parallel execution |
-| Verify | `/codex:review` + `/ccg` | Independent triple-model review |
+| Verify | `ask codex` + `/ccg` | Independent triple-model review |
 | QA | `/oh-my-claudecode:ultraqa` | Autonomous cycling until goals pass |
 | Ship | `/commit-commands:commit-push-pr` | Commit · push · open PR |
 
@@ -250,17 +254,12 @@ npm install -g @tobilu/qmd
 claude plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
 claude plugin install oh-my-claudecode
 
-# Superpowers (TDD and execution discipline)
-claude plugin install superpowers@claude-plugins-official
-
-# Codex plugin (dual verification)
-claude plugin marketplace add openai/codex-plugin-cc
-claude plugin install codex@openai-codex
-
 # Utilities
 claude plugin install commit-commands@claude-plugins-official
 claude plugin install skill-creator@claude-plugins-official
 ```
+
+> TDD skills (test-driven-development, verification-before-completion, finishing-a-development-branch) are included in `.claude/skills/` — no plugin needed.
 
 **3. OMC initialization:**
 
@@ -294,9 +293,8 @@ Restart Claude Code after adding.
 **6. API keys and authentication:**
 
 ```bash
-# OpenAI (Codex)
+# OpenAI (Codex CLI)
 export OPENAI_API_KEY=sk-...   # add to shell profile
-codex login
 
 # Gemini (Google OAuth)
 gemini   # opens browser for authentication
