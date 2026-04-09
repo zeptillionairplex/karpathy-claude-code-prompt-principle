@@ -1,29 +1,33 @@
-# Claude Code Prompt Principles
+# Claude Code Prompt Principles v2
 
-A production-ready Claude Code workspace setup based on Andrej Karpathy's four coding principles — with a full AI-assisted development pipeline, automated hooks, and dual-model code verification (Claude + Codex).
+Claude Code workspace setup based on Andrej Karpathy's four coding principles.
+OMC multi-agent orchestration + Superpowers TDD + triple-model verification.
 
 ## What You Get
 
-- **Power Stack pipeline** — Plan → Manage → Build → Verify using gstack, GSD, and Superpowers TDD
-- **Dual-model verification** — Codex (OpenAI) reviews every implementation wave, catching Claude's blind spots
-- **Automated hooks** — context hygiene, doc drift detection, skill analysis, QMD worktree sync
-- **Karpathy's 4 principles** enforced via `CLAUDE.md` rules: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution
-- **QMD codebase search** — hybrid BM25 + vector search so Claude never explores blindly with Glob/Grep
-- **One-command setup** — `/setup` installs everything from a fresh clone
+- **OMC Multi-Agent** — 29 specialized agents, parallel execution, smart model routing (30–50% cost reduction)
+- **Superpowers TDD** — test first → implement → verify, strict execution loop
+- **Triple-Model Verification** — Claude (implementation) + Codex (review) + Gemini (UI/large-context analysis)
+- **Context Optimization** — 44% fixed overhead reduction vs v1 (21.5K → ~12K)
+- **Karpathy's 4 Principles** — enforced via rules (Think / Simplicity / Surgical / Goal-Driven)
+- **QMD Semantic Search** — BM25 + vector search instead of Glob/Grep
+- **One-Command Setup** — `/setup` configures the full environment automatically
 
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) CLI
-- Node.js 18.18 or later
-- Python 3.10 or later
+- Node.js 18.18+
+- Python 3.10+
 - Git
-- An OpenAI API key (for Codex verification) — [get one here](https://platform.openai.com/api-keys)
+- tmux (for OMC team mode — optional)
+- OpenAI API key (for Codex verification) — [get one here](https://platform.openai.com/api-keys)
+- Google account (for Gemini CLI OAuth)
 
 ## Quick Start
 
 ```bash
-git clone <this-repo>
-cd <this-repo>
+git clone https://github.com/zeptillionairplex/karpathy-claude-code-prompt-principle.git
+cd karpathy-claude-code-prompt-principle
 ```
 
 Open Claude Code in this directory, then run:
@@ -32,172 +36,240 @@ Open Claude Code in this directory, then run:
 /setup
 ```
 
-That's it. `/setup` checks your environment, installs all plugins and CLI tools, and walks you through the two manual steps (API key + MCP config).
+`/setup` handles environment checks, CLI installation, plugin installation, OMC initialization, and QMD indexing.
 
 ## Project Structure
 
 ```
 .
-├── CLAUDE.md                    # Project rules — auto-loaded every session
+├── CLAUDE.md                        # Project rules — auto-loaded every session
 ├── .claude/
-│   ├── settings.json            # Hooks configuration
-│   ├── rules/                   # Behavioral rules (loaded on demand)
-│   │   ├── behavior.md          # Karpathy's 4 principles
-│   │   ├── architecture.md      # Context boundaries, FSD, Clean Architecture
-│   │   ├── code-style.md        # Naming, commits, documentation
-│   │   ├── codex.md             # Codex verification — when and how
-│   │   ├── context-hygiene.md   # What NOT to read (node_modules, etc.)
-│   │   ├── context-management.md # /clear vs /compact — when to use each
-│   │   └── qmd.md               # QMD search rules and setup
-│   ├── skills/                  # Custom slash commands
-│   │   ├── setup/               # /setup — environment installer
-│   │   ├── power-stack/         # /power-stack — full dev lifecycle
-│   │   ├── explore/             # /explore — targeted codebase navigation
-│   │   ├── implement/           # /implement — feature implementation
-│   │   ├── fix-bug/             # /fix-bug — minimal bug fixes
-│   │   ├── refactor/            # /refactor — behavior-preserving refactors
-│   │   └── ...                  # Additional domain skills
-│   └── scripts/                 # Hook scripts (Python)
-│       ├── guard-file-read.py   # Blocks context-hygiene violations
-│       ├── guard-bash.py        # Blocks dangerous shell commands
-│       ├── doc-guardian.py      # Detects stale CLAUDE.md on session end
-│       ├── context-monitor.py   # Warns when context approaches 50%
-│       ├── skill-hook-analyzer.py # Analyzes new skills for hook patterns
-│       ├── sync-skills.py       # Keeps skills registry up to date
-│       ├── qmd-worktree-sync.py # Registers/removes git worktrees in QMD
-│       └── notify.py            # Session-end desktop notification
+│   ├── settings.json                # Hooks configuration
+│   ├── CLAUDE.md                    # OMC orchestration config
+│   ├── rules/                       # Behavioral rules (3 files)
+│   │   ├── coding-principles.md     # Karpathy's 4 principles + architecture + code style
+│   │   ├── context-rules.md         # Paths to never read + /clear vs /compact
+│   │   └── tools-rules.md           # QMD / Codex / Gemini / OMC usage rules
+│   ├── skills/                      # Core slash commands
+│   │   ├── setup/                   # /setup — environment installer
+│   │   ├── power-stack/             # /power-stack — full dev lifecycle
+│   │   ├── explore/                 # /explore — codebase navigation
+│   │   ├── implement/               # /implement — feature implementation
+│   │   ├── fix-bug/                 # /fix-bug — minimal bug fixes
+│   │   ├── refactor/                # /refactor — behavior-preserving refactors
+│   │   ├── verify-implementation/   # /verify-implementation — implementation verification
+│   │   ├── manage-skills/           # /manage-skills — skill management
+│   │   ├── omc-reference/           # /omc-reference — OMC agent catalog
+│   │   └── optional/                # Language-specific skills (auto-detected)
+│   │       ├── react/               # React/TypeScript
+│   │       ├── python/              # Python
+│   │       ├── python-structure/    # Python project structure
+│   │       ├── supabase/            # Supabase
+│   │       └── n8n/                 # n8n workflows
+│   └── scripts/                     # Hook scripts (Python)
+│       ├── guard-file-read.py       # Blocks context-rules violations
+│       ├── guard-bash.py            # Blocks dangerous shell commands
+│       ├── bash-output-limiter.py   # Limits Bash output size
+│       ├── guard-golang-best-practices.py  # Go best practices guard
+│       ├── doc-guardian.py          # Detects stale CLAUDE.md at session end
+│       ├── context-monitor.py       # Warns at 60% (compact) and 80% (urgent)
+│       ├── skill-hook-analyzer.py   # Suggests hooks when new skills are added
+│       ├── sync-skills.py           # Keeps skills registry up to date
+│       ├── qmd-worktree-sync.py     # Syncs git worktrees with QMD index
+│       └── notify.py                # Session-end desktop notification
 └── docs/
-    └── rules/                   # Domain-specific rules (React, Go, Python, etc.)
-        ├── authorization.md     # RBAC / ReBAC / ABAC — model selection, schemas, prompts
-        ├── celery.md            # Celery task patterns, FastAPI integration, scheduling
-        ├── dependency-injection.md # Go manual DI / Wire, Python FastAPI Depends
-        └── error-handling.md   # Domain errors, central middleware, unified response format
+    └── rules/                       # Domain-specific rules (loaded on demand)
+        ├── react.md
+        ├── go.md
+        ├── python.md
+        ├── database.md
+        ├── testing.md
+        ├── docker.md
+        ├── authorization.md
+        ├── celery.md
+        ├── dependency-injection.md
+        └── error-handling.md
 ```
 
 ## How It Works
 
-### Layer 1 — Rules (`CLAUDE.md` + `.claude/rules/`)
+### Layer 1 — Rules (3 files)
 
-Rules are plain Markdown files that Claude reads when relevant. `CLAUDE.md` is loaded automatically every session; domain rules are loaded on demand via pointers in `CLAUDE.md`.
+`CLAUDE.md` is auto-loaded every session. Domain rules are loaded on demand via pointers.
 
-Key rules:
 | File | Purpose |
 |------|---------|
-| `behavior.md` | Karpathy's 4 principles — the foundation of every decision |
-| `codex.md` | When to run Codex, how to classify findings, what to do with them |
-| `context-hygiene.md` | Explicit list of paths Claude must never load (node_modules, dist, etc.) |
-| `context-management.md` | `/clear` vs `/compact` — when each is appropriate, what's forbidden |
-| `qmd.md` | QMD search-first discipline — Glob/Grep only as fallback |
-| `docs/rules/authorization.md` | RBAC / ReBAC / ABAC — model selection, schemas, middleware, prompts |
-| `docs/rules/celery.md` | Celery task patterns, FastAPI integration, Beat scheduling |
-| `docs/rules/dependency-injection.md` | Go manual DI / Wire, Python FastAPI Depends chaining |
-| `docs/rules/error-handling.md` | Domain errors, central middleware, unified response format |
+| `coding-principles.md` | Karpathy's 4 principles · architecture boundaries · code style |
+| `context-rules.md` | Paths Claude must never read · `/clear` vs `/compact` criteria |
+| `tools-rules.md` | QMD-first search · Codex verification · Gemini · OMC usage |
 
-### Layer 2 — Skills (`.claude/skills/`)
+### Layer 2 — Skills (core + optional)
 
-Skills are slash commands that give Claude structured workflows. Each lives in its own folder as `SKILL.md`.
+Slash commands that give Claude structured workflows.
 
-Key skills:
+Core skills:
+
 | Command | Purpose |
 |---------|---------|
-| `/setup` | Install all plugins, CLI tools, and skills from scratch |
-| `/power-stack` | Orchestrate the full Plan → Build → Verify pipeline |
+| `/setup` | CLI install · plugins · OMC init · QMD indexing |
+| `/power-stack` | Full lifecycle orchestration |
 | `/explore` | Navigate to a target area in max 4 tool calls |
-| `/fix-bug` | Minimal bug fix with test-first discipline |
+| `/fix-bug` | Write test first, then minimal fix |
+| `/implement` | Feature implementation with TDD |
+| `/refactor` | Behavior-preserving refactor |
 
-Third-party skills installed by `/setup`:
+Optional skills (`optional/`) — `/setup` auto-detects project language and activates:
+
+| Detection | Activated skill |
+|-----------|----------------|
+| package.json with "react" or tsconfig.json | `optional/react/` |
+| requirements.txt or pyproject.toml | `optional/python/`, `optional/python-structure/` |
+| go.mod | `optional/golang/` |
+| supabase/ directory or SUPABASE in .env | `optional/supabase/` |
+| n8n config files | `optional/n8n/` |
+
+External skills (auto-installed by `/setup`):
 - **Superpowers** — TDD, parallel agents, plan writing, code review workflows
-- **GSD** — Project planning, phase management, goal-backward verification
-- **gstack** — Multi-persona architecture review, QA, security audit, ship
+- **oh-my-claudecode (OMC)** — 29 specialized agents, ultrawork, team, autopilot, and more
 
-### Layer 3 — Hooks (`.claude/settings.json`)
+### Layer 3 — Hooks
 
-Hooks run Python scripts automatically on Claude Code events. They enforce rules regardless of what Claude decides.
+Hooks run Python scripts automatically on Claude Code events, enforcing rules regardless of Claude's decisions.
 
 | Event | Script | What it does |
 |-------|--------|-------------|
 | `PreToolUse(Read/Grep/Glob)` | `guard-file-read.py` | Blocks reads of `node_modules`, `dist`, lock files, etc. |
 | `PreToolUse(Bash)` | `guard-bash.py` | Blocks destructive shell patterns |
+| `PreToolUse(Bash)` | `bash-output-limiter.py` | Limits Bash output size |
+| `PreToolUse(Bash)` | `guard-golang-best-practices.py` | Detects Go best practice violations |
 | `PostToolUse(Write/Edit)` | `skill-hook-analyzer.py` | Suggests hooks when new skills are added |
 | `PostToolUse(Bash: git worktree)` | `qmd-worktree-sync.py` | Keeps QMD index in sync with worktrees |
 | `Stop` | `doc-guardian.py` | Detects missing/stale `CLAUDE.md` at session end |
-| `Stop` | `context-monitor.py` | Warns at 60% (consider `/compact`) and 80% (urgent: `/clear` or `/compact`) |
+| `Stop` | `context-monitor.py` | 60% (consider `/compact`) · 80% (urgent `/clear` or `/compact`) |
 
-### Layer 4 — Dual-Model Verification
+### Layer 4 — OMC Multi-Agent Orchestration
 
-Every implementation wave goes through two models:
+oh-my-claudecode (OMC) coordinates specialized agents for each task type.
 
-1. **Claude** writes and tests the code
-2. **Codex (OpenAI)** reviews the diff independently
+| Keyword | Behavior |
+|---------|----------|
+| `autopilot` | Autonomous single-task execution |
+| `ultrawork` / `ulw` | Parallel high-throughput execution |
+| `ralph` | Self-referential loop until goal is met |
+| `team N:executor` | N parallel agents on a shared task list |
+| `deep interview` | Socratic requirements interview |
+| `ccg` | Claude + Codex + Gemini triple verification |
+| `ultraqa` | Autonomous QA cycling until all goals pass |
+
+### Layer 5 — Triple-Model Verification
+
+| Model | Role |
+|-------|------|
+| Claude | Implementation · test writing |
+| Codex (OpenAI) | Independent diff review · security · logic errors |
+| Gemini | UI/UX review · large-context analysis |
 
 ```bash
-# After each wave passes tests:
+# Codex review
 git diff HEAD~1 | codex "Review this diff for bugs, security issues, and logic errors."
+# Or: /codex:review
 
-# Or use the plugin slash command:
-/codex:review
-/codex:adversarial-review
+# Triple verification (CCG mode)
+/ccg "Review implemented feature"
 ```
 
-Findings are saved to `.planning/phases/0N-name/0N-CODEX.md` and gated:
+Findings are gated by severity:
 - **HIGH** → fix before next wave
-- **WARN** → fix before Stage 4 QA
+- **WARN** → fix before QA
 - **INFO** → optional
 
-### Layer 5 — QMD Search
+### Layer 6 — QMD Semantic Search
 
-[QMD](https://github.com/tobias-luedtke/qmd) indexes the codebase with hybrid BM25 + vector search. Claude queries it before opening any file, keeping context usage minimal.
+[QMD](https://github.com/tobias-luedtke/qmd) indexes the codebase with hybrid BM25 + vector search. Claude always queries QMD before opening any file.
 
 ```
-mcp__qmd__query  →  conceptual search ("user auth flow")
-mcp__qmd__get    →  fetch a specific file by path
-mcp__qmd__multi_get → fetch several files at once
+mcp__qmd__query     →  conceptual search ("user auth flow")
+mcp__qmd__get       →  fetch a specific file by path
+mcp__qmd__multi_get →  fetch multiple files at once
 ```
 
-## The Power Stack Pipeline
+## The Power Stack Pipeline v2
 
 For non-trivial projects, run `/power-stack`:
 
 ```
-Session 1: /gstack:autoplan  → architecture review → .planning/PROJECT.md
-Session 2: /gsd:new-project  → phase plans
-Session 3+: superpowers:tdd + parallel agents (one per wave)
-            └─ After each wave: /codex:review (Codex verify)
-Final:      /gstack:qa + /gstack:cso + /gstack:ship
+deep-interview → omc-plan → ultrawork/team + TDD → codex:review → ultraqa → ship
 ```
 
-State persists across sessions in `POWERSTACK.md`. Context is capped at 50% per session for peak output quality.
+| Stage | Command | Purpose |
+|-------|---------|---------|
+| Plan | `/oh-my-claudecode:deep-interview` | Socratic requirements clarification |
+| Architect | `/oh-my-claudecode:omc-plan --consensus` | Consensus-based plan |
+| Implement | `ultrawork` / `team N:executor` | TDD + parallel execution |
+| Verify | `/codex:review` + `/ccg` | Independent triple-model review |
+| QA | `/oh-my-claudecode:ultraqa` | Autonomous cycling until goals pass |
+| Ship | `/commit-commands:commit-push-pr` | Commit · push · open PR |
+
+State persists across sessions in `.omc/`. Keep context under 50% per session.
+
+## Migrating from v1
+
+If you need the full v1 stack (gstack + GSD + Superpowers):
+
+```bash
+git checkout v1-full-stack
+```
+
+v2 changes summary:
+- Rules: 7 files → 3 files (44% overhead reduction)
+- State: `.planning/` → `.omc/`
+- Pipeline: gstack/GSD → OMC multi-agent
+- Verification: dual → triple (Gemini added)
 
 ## Manual Setup
 
-If you prefer not to use `/setup`, install each piece manually:
+If you prefer not to use `/setup`:
 
-**Claude Code plugins:**
-```bash
-claude plugin install superpowers@claude-plugins-official
-claude plugin install commit-commands@claude-plugins-official
-claude plugin install frontend-design@claude-plugins-official
-claude plugin install skill-creator@claude-plugins-official
-claude plugin install typescript-lsp@claude-plugins-official
-claude plugin install gopls-lsp@claude-plugins-official
-claude plugin install pyright-lsp@claude-plugins-official
-claude plugin marketplace add openai/codex-plugin-cc
-claude plugin install codex@openai-codex
-```
+**1. CLI tools:**
 
-**CLI tools:**
 ```bash
+# Codex CLI (OpenAI code review)
 npm install -g @openai/codex
+
+# Gemini CLI (UI/UX review and large-context analysis)
+npm install -g @google/gemini-cli
+
+# QMD (codebase semantic search)
 npm install -g @tobilu/qmd
 ```
 
-**Skills:**
+**2. Claude Code plugins:**
+
 ```bash
-npx skills add ctsstc/get-shit-done-skills@gsd -y -a claude-code
-npx skills add garrytan/gstack@gstack -y -a claude-code
+# OMC — install first (multi-agent orchestration core)
+claude plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+claude plugin install oh-my-claudecode
+
+# Superpowers (TDD and execution discipline)
+claude plugin install superpowers@claude-plugins-official
+
+# Codex plugin (dual verification)
+claude plugin marketplace add openai/codex-plugin-cc
+claude plugin install codex@openai-codex
+
+# Utilities
+claude plugin install commit-commands@claude-plugins-official
+claude plugin install skill-creator@claude-plugins-official
 ```
 
-**QMD index:**
+**3. OMC initialization:**
+
+```
+/oh-my-claudecode:omc-setup --local
+```
+
+**4. QMD index:**
+
 ```bash
 DIR=$(basename "$PWD")
 qmd collection add . --name "$DIR" --mask "**/*.{ts,tsx,js,jsx,py,go,rs,md,json,yaml,yml,toml}"
@@ -205,7 +277,10 @@ qmd collection add .claude/rules --name rules --mask "**/*.md"
 qmd update && qmd embed --chunk-strategy auto
 ```
 
-**MCP server** — add to `~/.claude/.mcp.json`:
+> First run of `qmd embed` downloads a ~2GB local model.
+
+**5. MCP server** — add to `~/.claude/.mcp.json`:
+
 ```json
 {
   "mcpServers": {
@@ -214,30 +289,29 @@ qmd update && qmd embed --chunk-strategy auto
 }
 ```
 
-**API key:**
+Restart Claude Code after adding.
+
+**6. API keys and authentication:**
+
 ```bash
+# OpenAI (Codex)
 export OPENAI_API_KEY=sk-...   # add to shell profile
 codex login
+
+# Gemini (Google OAuth)
+gemini   # opens browser for authentication
 ```
 
 ## Principles
 
-This setup is built around four principles from Andrej Karpathy's approach to working with AI coding assistants:
+Four principles from Andrej Karpathy's approach to AI-assisted coding:
 
-1. **Think Before Coding** — State assumptions, ask when uncertain, push back on overcomplicated requests
-2. **Simplicity First** — No features, abstractions, or error handling beyond what was asked
-3. **Surgical Changes** — Only modify code directly related to the request; never "improve" adjacent code
-4. **Goal-Driven Execution** — Transform tasks into verifiable goals; write tests before implementation
+1. **Think Before Coding** — state assumptions, ask when uncertain, push back on overcomplicated requests
+2. **Simplicity First** — no features, abstractions, or error handling beyond what was asked
+3. **Surgical Changes** — only modify code directly related to the request; never "improve" adjacent code
+4. **Goal-Driven Execution** — transform tasks into verifiable goals; write tests before implementation
 
-These are enforced via `.claude/rules/behavior.md`, which Claude loads automatically.
-
-## Contributing
-
-Rules and skills improve over time. When you find a recurring mistake:
-
-1. Add a rule to `.claude/rules/` (or update an existing one)
-2. If it's workflow-related, update the relevant skill in `.claude/skills/`
-3. Keep `CLAUDE.md` minimal — it's a pointer file, not a documentation file
+Enforced automatically via `.claude/rules/coding-principles.md`.
 
 ## License
 
