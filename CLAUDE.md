@@ -5,21 +5,21 @@ If QMD MCP is connected (`mcp__qmd__*` tools available): always use QMD query/ge
 If QMD is not connected: follow the Setup section in `.claude/rules/tools-rules.md` before doing anything else.
 
 ## Core Rules (always apply)
-→ Coding principles & architecture: `.claude/rules/coding-principles.md`
-→ Context hygiene & /clear vs /compact: `.claude/rules/context-rules.md`
-→ QMD / Codex / Gemini / OMC:         `.claude/rules/tools-rules.md`
+→ Coding principles & architecture: `.claude/rules/coding-principles.md`  
+→ Context hygiene & /clear vs /compact: `.claude/rules/context-rules.md`  
+→ QMD / Codex / Gemini / OMC:         `.claude/rules/tools-rules.md`  
 
 ## Domain Rules (read when relevant)
-→ React/TS:      `docs/rules/react.md`
-→ Go:            `docs/rules/go.md`
-→ Python:        `docs/rules/python.md`
-→ Database:      `docs/rules/database.md`
-→ Testing:       `docs/rules/testing.md`
-→ Docker:        `docs/rules/docker.md`
-→ Authorization: `docs/rules/authorization.md`
-→ Celery:        `docs/rules/celery.md`
-→ DI patterns:   `docs/rules/dependency-injection.md`
-→ Error handling: `docs/rules/error-handling.md`
+→ React/TS:      `docs/rules/react.md`  
+→ Go:            `docs/rules/go.md`  
+→ Python:        `docs/rules/python.md`  
+→ Database:      `docs/rules/database.md`  
+→ Testing:       `docs/rules/testing.md`  
+→ Docker:        `docs/rules/docker.md`  
+→ Authorization: `docs/rules/authorization.md`  
+→ Celery:        `docs/rules/celery.md`  
+→ DI patterns:   `docs/rules/dependency-injection.md`  
+→ Error handling: `docs/rules/error-handling.md`  
 
 ## Evolution Rules
 - Add rules only when recurring mistakes are discovered.
