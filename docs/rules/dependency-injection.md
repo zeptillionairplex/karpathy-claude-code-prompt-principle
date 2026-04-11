@@ -1,3 +1,6 @@
+---
+globs: "**/wire.go, **/dependencies.py, **/container.py, **/providers/**"
+---
 # Dependency Injection
 
 ## Principle

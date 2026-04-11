@@ -1,3 +1,6 @@
+---
+globs: "**/tasks/**, **/tasks.py, **/celery*.py, **/worker/**"
+---
 # Celery
 
 ## Position in Clean Architecture

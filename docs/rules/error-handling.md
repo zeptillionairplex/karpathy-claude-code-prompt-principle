@@ -1,3 +1,6 @@
+---
+globs: "**/errors.go, **/exceptions.py, **/middleware/error*, **/core/exceptions*"
+---
 # Error Handling
 
 ## Principle

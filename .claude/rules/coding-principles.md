@@ -29,9 +29,9 @@
 
 **Rule:** Every folder is a self-contained context boundary. One feature = one folder. Read the folder's `CLAUDE.md` first. Never explore unrelated folders. One-way dependency: higher layers import lower, never reverse.
 
-**Frontend (FSD):** `app → pages → widgets → features → entities → shared` — dependency flows downward only, each slice exports via `index.ts`. → `docs/rules/react.md`
+**Frontend (FSD):** one-way dependency `app → pages → widgets → features → entities → shared`, each slice exports via `index.ts` only. → `docs/rules/react.md`
 
-**Backend (Clean Architecture):** `infrastructure → interfaces → use_cases → entities` — dependency points inward, interfaces injected, never concrete. → `docs/rules/go.md` / `docs/rules/python.md`
+**Backend (Clean Architecture):** dependency points inward — `infrastructure → interfaces → use_cases → entities`. Interfaces injected, never concrete. Error handling at delivery layer only. → `docs/rules/go.md` / `docs/rules/python.md` / `docs/rules/error-handling.md`
 
 **Self-Describing Folders:** Every domain/feature folder has a `CLAUDE.md`. Run `/evolving-docs` to create or update. `doc-guardian.py` (Stop hook) detects missing/stale `CLAUDE.md` after each session.
 

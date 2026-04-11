@@ -28,8 +28,7 @@ infrastructure → interfaces/adapters → use_cases → entities
 - DB operations must be async (asyncpg / SQLAlchemy async).
 
 ## Error Handling
-- Use HTTPException with explicit status codes.
-- Define custom Exception classes for predictable errors.
+→ See `docs/rules/error-handling.md` for full patterns (domain exceptions, FastAPI handlers, response format).
 
 ## Types
 - Type hints required on all functions.

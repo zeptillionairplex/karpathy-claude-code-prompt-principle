@@ -25,9 +25,7 @@ infrastructure → interfaces/adapters → use_cases → entities
 - Each domain folder MUST have a `CLAUDE.md` listing its layer, purpose, and files.
 
 ## Error Handling
-- Propagate errors upward. Log only at handler layer.
-- Add context with fmt.Errorf("...: %w", err).
-- No panic — except initialization code.
+→ See `docs/rules/error-handling.md` for full patterns (domain errors, central middleware, wrapping rules).
 
 ## API Response Format
 ```go

@@ -34,4 +34,4 @@ This project uses oh-my-claudecode (OMC).
 
 ## Development Pipeline
 Run the full pipeline with /power-stack:
-deep-interview → omc-plan → ultrawork/team + TDD → codex:review → ultraqa → ship
+deep-interview → omc-plan → ultrawork/team + TDD → /ccg (codex+gemini review) → ultraqa → ship

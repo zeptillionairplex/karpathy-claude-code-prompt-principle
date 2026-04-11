@@ -1,3 +1,6 @@
+---
+globs: "**/middleware/**, **/auth/**, **/permission/**, **/policy/**"
+---
 # Authorization
 
 ## Model Selection
