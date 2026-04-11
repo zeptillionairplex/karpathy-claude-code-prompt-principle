@@ -73,6 +73,7 @@ Open Claude Code in this directory, then run:
 │       ├── guard-golang-best-practices.py  # Go best practices guard
 │       ├── doc-guardian.py          # Detects stale CLAUDE.md at session end
 │       ├── context-monitor.py       # Warns at 60% (compact) and 80% (urgent)
+│       ├── lint-check.py            # Prints lint commands for changed Go/Python/TS files
 │       ├── skill-hook-analyzer.py   # Suggests hooks when new skills are added
 │       ├── sync-skills.py           # Keeps skills registry up to date
 │       ├── qmd-worktree-sync.py     # Syncs git worktrees with QMD index
@@ -136,7 +137,20 @@ Built-in local skills (included in this repo, no plugin required):
 - **verification-before-completion** — evidence-first completion gate
 - **finishing-a-development-branch** — test → present 4 options → execute → cleanup
 
-### Layer 3 — Hooks
+### Layer 3 — Permissions
+
+`settings.local.json` enforces hard limits at the system level — Claude cannot override these regardless of instructions.
+
+**Deny list (always blocked):**
+- `rm -rf /` or `rm -rf ~*` — root/home deletion
+- `git push --force` / `git push -f` to any branch
+- `git reset --hard HEAD~*` — destructive history rewrite
+- `DROP TABLE`, `DELETE FROM` (without WHERE), `TRUNCATE` — database destruction
+- `sudo rm`, `chmod -R 777` — privilege escalation patterns
+
+These complement `guard-bash.py` (which blocks at the hook layer) with an additional permission-layer gate.
+
+### Layer 4 — Hooks
 
 Hooks run Python scripts automatically on Claude Code events, enforcing rules regardless of Claude's decisions.
 
@@ -150,8 +164,9 @@ Hooks run Python scripts automatically on Claude Code events, enforcing rules re
 | `PostToolUse(Bash: git worktree)` | `qmd-worktree-sync.py` | Keeps QMD index in sync with worktrees |
 | `Stop` | `doc-guardian.py` | Detects missing/stale `CLAUDE.md` at session end |
 | `Stop` | `context-monitor.py` | 60% (consider `/compact`) · 80% (urgent `/clear` or `/compact`) |
+| `Stop` | `lint-check.py` | Detects changed Go/Python/TS files and prints relevant lint commands |
 
-### Layer 4 — OMC Multi-Agent Orchestration
+### Layer 5 — OMC Multi-Agent Orchestration
 
 oh-my-claudecode (OMC) coordinates specialized agents for each task type.
 
@@ -165,7 +180,7 @@ oh-my-claudecode (OMC) coordinates specialized agents for each task type.
 | `ccg` | Claude + Codex + Gemini triple verification |
 | `ultraqa` | Autonomous QA cycling until all goals pass |
 
-### Layer 5 — Triple-Model Verification
+### Layer 6 — Triple-Model Verification
 
 | Model | Role |
 |-------|------|
@@ -187,7 +202,7 @@ Findings are gated by severity:
 - **WARN** → fix before QA
 - **INFO** → optional
 
-### Layer 6 — QMD Semantic Search
+### Layer 7 — QMD Semantic Search
 
 [QMD](https://github.com/tobias-luedtke/qmd) indexes the codebase with hybrid BM25 + vector search. Claude always queries QMD before opening any file.
 
@@ -202,7 +217,7 @@ mcp__qmd__multi_get →  fetch multiple files at once
 For non-trivial projects, run `/power-stack`:
 
 ```
-deep-interview → omc-plan → ultrawork/team + TDD → codex:review → ultraqa → ship
+deep-interview → omc-plan → ultrawork/team + TDD → /ccg (codex+gemini review) → ultraqa → ship
 ```
 
 | Stage | Command | Purpose |
@@ -210,7 +225,7 @@ deep-interview → omc-plan → ultrawork/team + TDD → codex:review → ultraq
 | Plan | `/oh-my-claudecode:deep-interview` | Socratic requirements clarification |
 | Architect | `/oh-my-claudecode:omc-plan --consensus` | Consensus-based plan |
 | Implement | `ultrawork` / `team N:executor` | TDD + parallel execution |
-| Verify | `ask codex` + `/ccg` | Independent triple-model review |
+| Verify | `/ccg` | Claude + Codex + Gemini triple-model review |
 | QA | `/oh-my-claudecode:ultraqa` | Autonomous cycling until goals pass |
 | Ship | `/commit-commands:commit-push-pr` | Commit · push · open PR |
 
