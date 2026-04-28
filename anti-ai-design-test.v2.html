@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacBook Pro — 모든 한계를 다시 정의합니다 [v2 mock]</title>
+<meta name="description" content="M5 Pro 와 M5 Max. 16시간 배터리. Liquid Retina XDR. 가장 강력한 노트북.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,900&family=Pretendard:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!--
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  anti-ai-design-test.v2.html — design-craft 스킬 검증용 v2 mock          │
+  │  Domain: Apple MacBook Pro (가상, 교육/검증 목적)                         │
+  │  Brand H: 25° (warm copper) — violet/cyan 200–270 밴드 밖                │
+  │  Reference: Apple MacBook Pro KR 페이지 IA + 리듬 차용                   │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  CHANGELOG vs v1 (anti-ai-design-test.html, koa pedals 1972)
+  ─────────────────────────────────────────────────────────────────────────
+  본 파일은 v1 의 결함 5개 (F-1~F-5) 를 3 commit (C1/C2/C3) 으로 분리
+  수정한다. C1 (현재): alias layer 도입 + Apple MacBook 도메인.
+
+  - F-1 [C1, 시각 인상 zero]: alias layer 도입 (--color-text-primary 등).
+        primitive 보존. 컴포넌트 selector 는 alias 만 참조.
+  - F-2 [C3, 시각 인상 clear]:  prose 블록 max-width: 36–60ch.
+  - F-3 [C3, 시각 인상 clear]:  font-feature-settings "kern liga calt"
+                                body, "tnum lnum" spec table.
+  - F-4 [C2, 시각 인상 micro]:  ink-muted luminance 조정 → APCA Lc 75 통과.
+  - F-5 [C3, 시각 인상 clear]:  12 § 4 KR+Latin 매트릭스에 본 페어
+                                (Pretendard + Fraunces) row K-2 등록.
+
+  Intentional deviation (Pre-mortem 시나리오 1 mitigation, design-craft
+  SKILL.md core principle #7):
+  - hue 는 권장 안 (warm 25° copper) + display 폰트는 매트릭스 안 (Fraunces)
+    으로 안전하게 잡되, **brand-500 의 chroma 0.130 → 0.155 로 의도적
+    한 단계 push**. 11 § 1 Step 2 권장 0.12–0.18 범위 안에서 mid 가 아닌
+    상한 근처. mean-regression 회피.
+
+  APCA AUDIT TABLE (placeholder — C2 에서 채워짐)
+  | pair | bg OKLCH | fg OKLCH | computed Lc | target Lc | pass |
+  |------|----------|----------|-------------|-----------|------|
+  | TBD | TBD | TBD | TBD | 75 | TBD |
+  APCA tool: https://www.myndex.com/APCA/
+
+  VISUAL IMPROVEMENTS vs v1 (3+, C3 이후 의미 가짐)
+  - typography contrast: hero h1 weight 900 + display Fraunces vs body 400
+  - color hierarchy: ink-primary / ink-secondary / ink-muted 3-tier 명확
+  - numeric alignment: spec table 숫자가 tabular figure (tnum + lnum)
+-->
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────
+     PRIMITIVE LAYER (raw color/spacing tokens)
+     컴포넌트 selector 가 직접 참조하지 않음. alias 가 가리킴.
+     ───────────────────────────────────────────────────────────────────── */
+  :root {
+    /* Brand ramp — H 25 (warm copper). violet/cyan 밴드 밖 */
+    --color-brand-50:  oklch(97% 0.018 25);
+    --color-brand-100: oklch(93% 0.040 25);
+    --color-brand-200: oklch(87% 0.075 25);
+    --color-brand-300: oklch(78% 0.110 25);
+    --color-brand-500: oklch(60% 0.155 25);  /* primary, intentional deviation: chroma 상한 근처 */
+    --color-brand-700: oklch(44% 0.130 25);
+    --color-brand-900: oklch(26% 0.082 25);
+
+    /* Neutral — chroma 0.008–0.012 (≠ 0) — anti-pattern #3 회피 */
+    --color-neutral-0:   oklch(99% 0.003 60);
+    --color-neutral-50:  oklch(97% 0.005 60);
+    --color-neutral-100: oklch(94% 0.008 60);
+    --color-neutral-200: oklch(88% 0.010 60);
+    --color-neutral-400: oklch(70% 0.012 60);
+    --color-neutral-500: oklch(58% 0.012 60);
+    --color-neutral-700: oklch(38% 0.011 60);
+    --color-neutral-900: oklch(20% 0.008 60);
+    --color-neutral-950: oklch(13% 0.006 60);
+
+    /* Semantic primitives */
+    --color-success-500: oklch(60% 0.150 145);
+    --color-error-500:   oklch(58% 0.190 25);
+
+    /* Spacing primitives */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-6: 32px;
+    --space-8: 48px;
+    --space-12: 64px;
+    --space-16: 96px;
+    --space-20: 128px;
+
+    /* Font size primitives */
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-base: 17px;
+    --text-md: 20px;
+    --text-lg: 26px;
+    --text-xl: 36px;
+    --text-2xl: 56px;
+    --text-3xl: 80px;
+
+    /* Radius primitives */
+    --radius-2: 4px;
+    --radius-3: 10px;
+    --radius-4: 14px;
+    --radius-5: 20px;
+    --radius-pill: 9999px;
+
+    /* Motion primitives */
+    --motion-fast: 140ms;
+    --motion-mid:  220ms;
+    --easing:      cubic-bezier(0.22, 0.61, 0.36, 1);
+
+    /* ───────────────────────────────────────────────────────────────────
+       SEMANTIC ALIAS LAYER  (F-1 fix — C1 commit)
+       컴포넌트 selector 는 이 alias 만 참조한다. 다크모드는 이 layer 를
+       swap 하고 primitive 는 보존.
+       ─────────────────────────────────────────────────────────────────── */
+
+    /* Surface */
+    --color-bg-base:      var(--color-neutral-50);
+    --color-bg-elevated:  var(--color-neutral-0);
+    --color-bg-warm:      oklch(96% 0.012 30);
+    --color-bg-band:      oklch(94% 0.014 28);
+    --color-bg-deep:      var(--color-neutral-950);
+
+    /* Ink (text) */
+    --color-text-primary:    var(--color-neutral-950);
+    --color-text-secondary:  var(--color-neutral-700);
+    --color-text-muted:      var(--color-neutral-500);
+    --color-text-inverted:   var(--color-neutral-50);
+    --color-text-emphasis:   var(--color-brand-700);
+
+    /* Border */
+    --color-border-subtle: oklch(85% 0.010 60);
+    --color-border-focus:  var(--color-brand-700);
+
+    /* Component alias */
+    --button-primary-bg:        var(--color-text-primary);
+    --button-primary-fg:        var(--color-text-inverted);
+    --button-primary-bg-hover:  var(--color-brand-900);
+
+    /* Shadow alias */
+    --shadow-raised:
+      0 1px 2px rgba(20, 14, 8, 0.04),
+      0 1px 1px rgba(20, 14, 8, 0.06);
+    --shadow-overlay:
+      0 4px 8px rgba(20, 14, 8, 0.06),
+      0 2px 4px rgba(20, 14, 8, 0.08);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     RESET + BASE
+     ───────────────────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    font-family: "Pretendard", system-ui, -apple-system, "Apple SD Gothic Neo", sans-serif;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--color-text-primary);
+    background: var(--color-bg-base);
+    word-break: keep-all;
+    line-break: strict;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection { background: var(--color-brand-300); color: var(--color-text-primary); }
+
+  a { color: inherit; text-underline-offset: 3px; }
+  button { font: inherit; color: inherit; }
+  img, svg { display: block; max-width: 100%; }
+
+  :focus { outline: none; }
+  :focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .eyebrow {
+    font-family: "Fraunces", Georgia, "Apple SD Gothic Neo", serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: var(--text-sm);
+    letter-spacing: 0.01em;
+    color: var(--color-text-emphasis);
+  }
+  .product-mark {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 900;
+    font-size: var(--text-md);
+    letter-spacing: -0.01em;
+  }
+  .micro {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     NAV
+     ───────────────────────────────────────────────────────────────────── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in oklch, var(--color-bg-base) 92%, transparent);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .nav__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+  }
+  .nav__brand svg { width: 22px; height: 22px; }
+  .nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-4);
+    margin-inline-start: var(--space-4);
+  }
+  .nav__list a {
+    text-decoration: none;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    padding: 8px 4px;
+    transition: color var(--motion-fast) var(--easing);
+  }
+  .nav__list a:hover { color: var(--color-text-primary); }
+  .nav__list a[aria-current="page"] {
+    color: var(--color-text-primary);
+    border-bottom: 2px solid var(--color-border-focus);
+  }
+  .nav__cta { margin-inline-start: auto; }
+
+  /* Buttons */
+  .btn {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius-2);
+    padding: 12px 20px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    transition: background-color var(--motion-fast) var(--easing),
+                color var(--motion-fast) var(--easing);
+  }
+  .btn--primary {
+    background: var(--button-primary-bg);
+    color: var(--button-primary-fg);
+  }
+  .btn--primary:hover { background: var(--button-primary-bg-hover); }
+  .btn--ghost {
+    background: transparent;
+    color: var(--color-text-primary);
+    padding: 10px 4px;
+    border-radius: 2px;
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+  }
+  .btn--ghost::after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 0;
+    background: var(--color-text-primary);
+    transition: width var(--motion-mid) var(--easing);
+    margin-top: 2px;
+    grid-column: 1 / -1;
+  }
+  .btn--ghost:hover::after { width: 100%; }
+  .btn--ghost .arrow {
+    margin-inline-start: 6px;
+    transition: transform var(--motion-fast) var(--easing);
+  }
+  .btn--ghost:hover .arrow { transform: translateX(3px); }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     HERO
+     ───────────────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding: 96px var(--space-4) 64px;
+    text-align: center;
+    background:
+      radial-gradient(60% 40% at 50% 30%, var(--color-bg-warm) 0%, transparent 70%),
+      var(--color-bg-base);
+    overflow: hidden;
+  }
+  .hero__eyebrow { display: block; margin-bottom: 18px; }
+  .hero__h1 {
+    font-family: "Pretendard", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 7.6vw, var(--text-3xl));
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    margin: 0 auto;
+    max-width: 16ch;
+    color: var(--color-text-primary);
+  }
+  .hero__h1 em {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-text-emphasis);
+  }
+  .hero__lede {
+    margin: 24px auto 0;
+    max-width: 38ch;
+    font-size: var(--text-md);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+  .hero__cta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3) var(--space-4);
+    margin-top: 36px;
+  }
+  .hero__visual {
+    margin: 56px auto 0;
+    width: min(680px, 84vw);
+    height: 320px;
+    border-radius: var(--radius-4);
+    background: linear-gradient(180deg, var(--color-neutral-100) 0%, var(--color-bg-warm) 100%);
+    display: grid;
+    place-items: center;
+    box-shadow: var(--shadow-overlay);
+    position: relative;
+  }
+  .hero__visual::before {
+    content: "";
+    position: absolute;
+    inset: 28px;
+    border: 1px solid color-mix(in oklch, var(--color-text-emphasis) 18%, transparent);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  .hero__visual svg { width: 78%; height: auto; }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     TAGLINE STRIP — "M5. M5 Pro. M5 Max." 차용
+     ───────────────────────────────────────────────────────────────────── */
+  .strip {
+    padding: 56px var(--space-4);
+    background: var(--color-bg-band);
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .strip__inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: var(--space-6);
+    align-items: baseline;
+  }
+  .strip__line {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 900;
+    font-size: clamp(28px, 4vw, var(--text-xl));
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+  .strip__line em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-text-emphasis);
+  }
+  .strip__spec dt {
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 4px;
+  }
+  .strip__spec dd {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-size: var(--text-md);
+    color: var(--color-text-primary);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     BENTO 1L+2S
+     ───────────────────────────────────────────────────────────────────── */
+  .bento {
+    padding: 80px var(--space-4);
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .bento__heading {
+    margin: 0 0 var(--space-8);
+    font-family: "Pretendard", sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 3.6vw, var(--text-xl));
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+    max-width: 22ch;
+    color: var(--color-text-primary);
+  }
+  .bento__heading em {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-text-emphasis);
+  }
+  .bento__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "feat-a feat-b"
+      "feat-a feat-c";
+    gap: var(--space-3);
+    min-height: 540px;
+  }
+  .bento__cell {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-3);
+    padding: 28px 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+  .bento__cell--a {
+    grid-area: feat-a;
+    background: var(--color-bg-deep);
+    color: var(--color-text-inverted);
+    border-color: var(--color-bg-deep);
+  }
+  .bento__cell--b { grid-area: feat-b; }
+  .bento__cell--c { grid-area: feat-c; background: var(--color-bg-warm); }
+
+  .bento__label {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: var(--text-sm);
+    color: var(--color-brand-300);
+  }
+  .bento__cell--b .bento__label,
+  .bento__cell--c .bento__label { color: var(--color-text-emphasis); }
+
+  .bento__title {
+    margin: 6px 0 var(--space-3);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    line-height: 1.3;
+    letter-spacing: -0.008em;
+  }
+  .bento__cell--a .bento__title { font-size: var(--text-xl); }
+
+  .bento__body {
+    margin: 0;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+  .bento__cell--a .bento__body {
+    color: var(--color-neutral-200);
+  }
+  .bento__diagram {
+    align-self: flex-end;
+    width: 60%;
+    max-width: 320px;
+    opacity: 0.9;
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     NARRATIVE (asymmetric 60/40)
+     ───────────────────────────────────────────────────────────────────── */
+  .narrative {
+    padding: 120px var(--space-4);
+    background: var(--color-bg-elevated);
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .narrative__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+  .narrative__copy { }
+  .narrative__h2 {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 3.6vw, 44px);
+    line-height: 1.25;
+    letter-spacing: -0.014em;
+    margin: 0 0 var(--space-3);
+    color: var(--color-text-primary);
+  }
+  .narrative__h2 em {
+    font-family: "Fraunces", Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-text-emphasis);
+  }
+  .narrative p {
+    font-size: var(--text-md);
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-3);
+  }
+  .narrative__visual {
+    aspect-ratio: 4 / 5;
+    background: linear-gradient(160deg, var(--color-bg-warm), var(--color-bg-band));
+    border-radius: var(--radius-4);
+    box-shadow: var(--shadow-raised);
+    display: grid;
+    place-items: center;
+  }
+  .narrative__visual svg { width: 60%; height: auto; }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     SPEC TABLE
+     ───────────────────────────────────────────────────────────────────── */
+  .spec {
+    padding: 64px var(--space-4);
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .spec__heading {
+    text-align: center;
+    margin: 0 0 var(--space-8);
+  }
+  .spec__heading h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 900;
+    font-size: clamp(28px, 3.6vw, 44px);
+    line-height: 1.2;
+    margin: 0 0 var(--space-2);
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+  .spec__heading p {
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+  .spec__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-4);
+  }
+  .spec__table th, .spec__table td {
+    padding: 18px 8px;
+    text-align: start;
+    border-bottom: 1px solid var(--color-border-subtle);
+    font-size: var(--text-base);
+  }
+  .spec__table th {
+    width: 40%;
+    color: var(--color-text-muted);
+    font-weight: 400;
+    font-size: var(--text-sm);
+  }
+  .spec__table td {
+    color: var(--color-text-primary);
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+  }
+  .spec__table tr:hover {
+    background: color-mix(in oklch, var(--color-bg-warm) 60%, transparent);
+  }
+  .spec__table tr.is-emphasis td {
+    color: var(--color-text-emphasis);
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     FINAL CTA
+     ───────────────────────────────────────────────────────────────────── */
+  .cta-band {
+    padding: 96px var(--space-4);
+    text-align: center;
+    background: var(--color-bg-deep);
+    color: var(--color-text-inverted);
+  }
+  .cta-band h2 {
+    font-family: "Pretendard", sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 3.8vw, 48px);
+    line-height: 1.25;
+    margin: 0 0 var(--space-3);
+    max-width: 22ch;
+    margin-inline: auto;
+    letter-spacing: -0.014em;
+  }
+  .cta-band p {
+    margin: 0 auto var(--space-6);
+    max-width: 38ch;
+    color: var(--color-neutral-200);
+    line-height: 1.7;
+  }
+  .cta-band .btn--primary {
+    background: var(--color-neutral-50);
+    color: var(--color-neutral-950);
+  }
+  .cta-band .btn--primary:hover { background: var(--color-brand-100); }
+  .cta-band .btn--ghost { color: var(--color-neutral-200); }
+  .cta-band .btn--ghost::after { background: var(--color-neutral-200); }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     FOOTER
+     ───────────────────────────────────────────────────────────────────── */
+  .footer {
+    padding: 64px var(--space-4) 32px;
+    background: var(--color-bg-base);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  .footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
+    gap: var(--space-6);
+  }
+  .footer__brand p {
+    margin: 12px 0 0;
+    color: var(--color-text-secondary);
+    max-width: 28ch;
+    font-size: var(--text-sm);
+  }
+  .footer__group h3 {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .footer__group ul { list-style: none; padding: 0; margin: 0; }
+  .footer__group li { margin-bottom: 8px; }
+  .footer__group a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    transition: color var(--motion-fast) var(--easing);
+  }
+  .footer__group a:hover {
+    color: var(--color-text-emphasis);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .footer__base {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border-subtle);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 880px) {
+    .strip__inner { grid-template-columns: 1fr 1fr; row-gap: var(--space-6); }
+    .strip__line { grid-column: 1 / -1; }
+    .bento__grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      grid-template-areas: "feat-a" "feat-b" "feat-c";
+      min-height: auto;
+    }
+    .narrative__inner { grid-template-columns: 1fr; gap: var(--space-6); }
+    .footer__inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .nav__list { display: none; }
+    .hero { padding-top: 64px; padding-bottom: 48px; }
+    .hero__visual { height: 240px; }
+    .footer__inner { grid-template-columns: 1fr; }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────
+     DARK MODE — alias swap (primitive 그대로)
+     ───────────────────────────────────────────────────────────────────── */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg-base:      oklch(15% 0.008 60);
+      --color-bg-elevated:  oklch(19% 0.010 60);
+      --color-bg-warm:      oklch(22% 0.018 30);
+      --color-bg-band:      oklch(20% 0.016 28);
+      --color-bg-deep:      oklch(10% 0.005 60);
+
+      --color-text-primary:    oklch(95% 0.005 60);
+      --color-text-secondary:  oklch(78% 0.009 60);
+      --color-text-muted:      oklch(60% 0.010 60);
+      --color-text-inverted:   oklch(15% 0.008 60);
+      --color-text-emphasis:   oklch(72% 0.110 25);
+
+      --color-border-subtle: oklch(30% 0.010 60);
+      --color-border-focus:  oklch(72% 0.110 25);
+
+      --button-primary-bg:        oklch(72% 0.110 25);
+      --button-primary-fg:        oklch(13% 0.006 60);
+      --button-primary-bg-hover:  oklch(80% 0.090 25);
+
+      --shadow-raised: none;
+      --shadow-overlay: none;
+    }
+    .bento__cell--a { background: oklch(22% 0.022 25); border-color: oklch(28% 0.020 25); color: var(--color-text-primary); }
+    .bento__cell--a .bento__body { color: var(--color-text-secondary); }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" role="banner">
+  <div class="nav__inner">
+    <a href="#top" class="nav__brand" aria-label="Apple 홈">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path fill="currentColor" d="M17.05 12.04c-.03-3.12 2.55-4.62 2.67-4.69-1.46-2.13-3.73-2.42-4.53-2.45-1.93-.2-3.77 1.13-4.75 1.13-.99 0-2.5-1.11-4.11-1.08-2.11.03-4.06 1.23-5.15 3.12-2.2 3.81-.56 9.45 1.58 12.55 1.05 1.51 2.3 3.21 3.94 3.15 1.59-.07 2.19-1.02 4.11-1.02 1.92 0 2.46 1.02 4.13.99 1.71-.03 2.79-1.54 3.83-3.06 1.21-1.76 1.71-3.46 1.74-3.55-.04-.02-3.34-1.28-3.46-5.09zm-3.13-9.36C14.79 1.59 15.4.1 15.24 0c-1.27.06-2.81.85-3.7 1.91-.81.94-1.52 2.45-1.33 3.92 1.41.11 2.86-.72 3.71-1.85z"/>
+      </svg>
+      <span class="product-mark">Apple</span>
+    </a>
+    <nav aria-label="주요 메뉴">
+      <ul class="nav__list">
+        <li><a href="#story" aria-current="page">MacBook Pro</a></li>
+        <li><a href="#chip">M5 칩</a></li>
+        <li><a href="#spec">사양</a></li>
+        <li><a href="#shop">구입하기</a></li>
+        <li><a href="#support">지원</a></li>
+      </ul>
+    </nav>
+    <div class="nav__cta">
+      <a href="#shop" class="btn btn--primary">구입하기</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <span class="eyebrow hero__eyebrow">MacBook Pro · M5 Series</span>
+    <h1 class="hero__h1" id="hero-title">
+      모든 한계를 다시 <em>정의합니다.</em>
+    </h1>
+    <p class="hero__lede">
+      M5 Pro 와 M5 Max. 16시간 배터리. Liquid Retina XDR.
+      이 노트북이 다음 10년을 만듭니다.
+    </p>
+    <div class="hero__cta">
+      <a href="#shop" class="btn btn--primary">3,290,000원부터 — 구입하기</a>
+      <a href="#chip" class="btn btn--ghost">M5 칩 자세히 알아보기 <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="hero__visual" role="img" aria-label="MacBook Pro 정면 도면">
+      <svg viewBox="0 0 600 220" aria-hidden="true">
+        <defs>
+          <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="oklch(48% 0.012 60)"/>
+            <stop offset="1" stop-color="oklch(28% 0.008 60)"/>
+          </linearGradient>
+          <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="oklch(20% 0.008 60)"/>
+            <stop offset="1" stop-color="oklch(14% 0.006 60)"/>
+          </linearGradient>
+        </defs>
+        <rect x="60" y="30" width="480" height="160" rx="14" fill="url(#lid)"/>
+        <rect x="78" y="44" width="444" height="132" rx="6" fill="url(#screen)"/>
+        <circle cx="300" cy="50" r="2" fill="oklch(50% 0.012 60)"/>
+        <text x="300" y="120" text-anchor="middle" fill="oklch(72% 0.110 25)" font-family="Fraunces, serif" font-style="italic" font-size="22" font-weight="500">M5 Max</text>
+        <rect x="60" y="190" width="480" height="14" rx="3" fill="oklch(35% 0.010 60)"/>
+        <rect x="280" y="194" width="40" height="6" rx="1" fill="oklch(20% 0.008 60)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- TAGLINE STRIP -->
+  <section class="strip" aria-label="제품 핵심 사양 요약">
+    <div class="strip__inner">
+      <p class="strip__line">M5. M5 Pro. <em>M5 Max.</em></p>
+      <dl class="strip__spec">
+        <dt>CPU 코어</dt>
+        <dd>최대 16</dd>
+      </dl>
+      <dl class="strip__spec">
+        <dt>통합 메모리</dt>
+        <dd>최대 128GB</dd>
+      </dl>
+      <dl class="strip__spec">
+        <dt>배터리</dt>
+        <dd>최대 22시간</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- BENTO -->
+  <section class="bento" id="chip" aria-labelledby="bento-heading">
+    <h2 class="bento__heading" id="bento-heading">
+      세 가지 변화. 모든 작업에서 <em>한계를 넘어.</em>
+    </h2>
+    <div class="bento__grid">
+      <article class="bento__cell bento__cell--a" aria-labelledby="cell-a-title">
+        <div>
+          <span class="bento__label">M5 Max · chip</span>
+          <h3 class="bento__title" id="cell-a-title">CPU 16코어, GPU 40코어. 압도적인 성능.</h3>
+          <p class="bento__body">
+            16코어 CPU 와 최대 40코어 GPU. M4 Max 대비 CPU 35%, GPU 50% 빨라졌습니다.
+            8K 영상 편집과 대규모 LLM 추론을 노트북 한 대로 처리합니다.
+          </p>
+        </div>
+        <svg class="bento__diagram" viewBox="0 0 320 80" aria-hidden="true">
+          <rect x="40" y="20" width="240" height="40" rx="4" fill="none" stroke="oklch(78% 0.080 25)" stroke-width="1.5"/>
+          <line x1="80" y1="40" x2="240" y2="40" stroke="oklch(78% 0.080 25)" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="160" y="44" text-anchor="middle" fill="oklch(78% 0.080 25)" font-family="Fraunces, serif" font-style="italic" font-size="11">M5 Max</text>
+        </svg>
+      </article>
+
+      <article class="bento__cell bento__cell--b" aria-labelledby="cell-b-title">
+        <span class="bento__label">디스플레이 · display</span>
+        <h3 class="bento__title" id="cell-b-title">Liquid Retina XDR. 모든 픽셀을 정확하게.</h3>
+        <p class="bento__body">
+          ProMotion 120Hz, 최대 1,600니트 HDR. 색역 P3, 표현은 진실 그대로.
+        </p>
+      </article>
+
+      <article class="bento__cell bento__cell--c" aria-labelledby="cell-c-title">
+        <span class="bento__label">배터리 · battery</span>
+        <h3 class="bento__title" id="cell-c-title">최대 22시간. 하루를 충분히.</h3>
+        <p class="bento__body">
+          한 번 충전으로 영상 재생 22시간. 이동 중에도 어댑터 없이.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- NARRATIVE -->
+  <section class="narrative" id="story" aria-labelledby="story-h2">
+    <div class="narrative__inner">
+      <div class="narrative__copy">
+        <span class="eyebrow">design note · 02</span>
+        <h2 class="narrative__h2" id="story-h2">
+          한 장의 알루미늄에서 — <em>한 대의 도구로.</em>
+        </h2>
+        <p>
+          MacBook Pro 의 케이스는 100% 재활용 알루미늄을 단일 블록에서 깎아 냅니다.
+          나사 한 개도 정확한 위치에서 정확한 각도로 들어갑니다.
+        </p>
+        <p>
+          내부 회로는 모두 100% 재활용 구리, 100% 재활용 희토류로 만들어집니다.
+          탄소 중립 제품 라인의 일부입니다.
+        </p>
+        <a href="#spec" class="btn btn--ghost">
+          환경 보고서 읽기 <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="narrative__visual" role="img" aria-label="알루미늄 단조 단계 다이어그램">
+        <svg viewBox="0 0 200 240" aria-hidden="true">
+          <rect x="20" y="20" width="160" height="200" rx="6" fill="oklch(96% 0.012 60)" stroke="oklch(78% 0.020 60)"/>
+          <rect x="50" y="60" width="100" height="120" rx="8" fill="oklch(85% 0.018 30)" stroke="oklch(60% 0.040 30)"/>
+          <line x1="50" y1="100" x2="150" y2="100" stroke="oklch(50% 0.012 30)" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="50" y1="140" x2="150" y2="140" stroke="oklch(50% 0.012 30)" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="100" y="210" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-size="10" fill="oklch(45% 0.020 30)">unibody · single billet</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEC TABLE -->
+  <section class="spec" id="spec" aria-labelledby="spec-h2">
+    <header class="spec__heading">
+      <h2 id="spec-h2">기술 사양</h2>
+      <p>14인치 / 16인치 모델 공통 기준입니다.</p>
+    </header>
+    <table class="spec__table" aria-describedby="spec-h2">
+      <caption class="micro" style="text-align:start; padding-bottom:12px;">MacBook Pro — M5 Max specification</caption>
+      <tbody>
+        <tr>
+          <th scope="row">칩</th>
+          <td>Apple M5 Max — 16코어 CPU, 40코어 GPU</td>
+        </tr>
+        <tr>
+          <th scope="row">통합 메모리</th>
+          <td>최대 128GB · 대역폭 600 GB/s</td>
+        </tr>
+        <tr>
+          <th scope="row">스토리지</th>
+          <td>최대 8TB SSD · 읽기 7,400 MB/s</td>
+        </tr>
+        <tr>
+          <th scope="row">디스플레이</th>
+          <td>Liquid Retina XDR · 14.2" 또는 16.2"</td>
+        </tr>
+        <tr class="is-emphasis">
+          <th scope="row">배터리 수명</th>
+          <td>최대 22시간 영상 재생 · 100% 재활용 코발트 셀</td>
+        </tr>
+        <tr>
+          <th scope="row">포트</th>
+          <td>Thunderbolt 5 × 3, HDMI, SDXC, MagSafe 3</td>
+        </tr>
+        <tr>
+          <th scope="row">크기 / 무게</th>
+          <td>312.6 × 221.2 × 15.5 mm / 1.55 kg</td>
+        </tr>
+        <tr>
+          <th scope="row">동봉물</th>
+          <td>USB-C MagSafe 3 케이블, 140W USB-C 어댑터</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta-band" id="shop" aria-labelledby="cta-h2">
+    <h2 id="cta-h2">새로운 MacBook Pro. 구입할 준비가 되셨나요.</h2>
+    <p>
+      14인치 3,290,000원부터. 16인치 3,990,000원부터. 무이자 할부.
+    </p>
+    <div class="hero__cta">
+      <a href="#shop" class="btn btn--primary">구입하기</a>
+      <a href="#story" class="btn btn--ghost">디자인 노트 읽기 <span class="arrow" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer" id="support">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <span class="product-mark">Apple</span>
+      <p>Apple Inc. 디자인 by Apple in California. 본 페이지는 design-craft 스킬 검증을 위한 가상 모크업입니다.</p>
+    </div>
+    <div class="footer__group">
+      <h3>제품</h3>
+      <ul>
+        <li><a href="#chip">MacBook Pro</a></li>
+        <li><a href="#spec">기술 사양</a></li>
+        <li><a href="#shop">구입하기</a></li>
+      </ul>
+    </div>
+    <div class="footer__group">
+      <h3>지원</h3>
+      <ul>
+        <li><a href="#support">고객 지원</a></li>
+        <li><a href="#support">제품 등록</a></li>
+        <li><a href="#support">수리 신청</a></li>
+      </ul>
+    </div>
+    <div class="footer__group">
+      <h3>자료</h3>
+      <ul>
+        <li><a href="#story">환경 보고서</a></li>
+        <li><a href="#spec">사용 설명서</a></li>
+        <li><a href="#story">디자인 노트</a></li>
+      </ul>
+    </div>
+    <div class="footer__group">
+      <h3>법적 고지</h3>
+      <ul>
+        <li><a href="#">이용 약관</a></li>
+        <li><a href="#">개인정보 처리방침</a></li>
+        <li><a href="#">사업자 정보</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__base">
+    <span>© 2026 Apple Inc. — Cupertino, California (가상)</span>
+    <span>본 페이지는 design-craft 스킬 검증을 위한 mock 입니다.</span>
+  </div>
+</footer>
+
+</body>
+</html>
