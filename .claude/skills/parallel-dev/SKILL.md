@@ -21,6 +21,7 @@ agents generate code from it independently and never drift.
 
 ## Reference docs
 → Strategy & rationale (the original Q&A): `../../../docs/research/parallel-dev-strategy.md`
+→ UI/UX, design tokens, non-AI-smell guide: `../design-craft/SKILL.md`
 → Repo layout & layered CLAUDE.md: `docs/01-layout.md`
 → Spec-first workflow with `oapi-codegen` + `openapi-typescript`: `docs/02-spec-workflow.md`
 → Subagent orchestration rules: `docs/03-subagents.md`

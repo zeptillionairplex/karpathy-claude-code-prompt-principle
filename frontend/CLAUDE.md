@@ -38,5 +38,5 @@ root `CLAUDE.md`; this file adds frontend-specific rules.
 
 ## Reference skills
 - `.claude/skills/optional/react/` — React/TS patterns (if linked by `/setup`)
-- `.claude/skills/optional/ui-ux/` — UI/UX guidelines (if linked)
+- `.claude/skills/design-craft/` — UI/UX, design tokens, non-AI-smell guide
 - `.claude/skills/parallel-dev/` — overall workflow and triage routines

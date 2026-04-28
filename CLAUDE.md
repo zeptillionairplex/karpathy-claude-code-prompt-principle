@@ -59,6 +59,17 @@ user-facing or regulator-bound output requires real legal sign-off.
 → Inline glossary + new-operator onboarding: `.claude/skills/parallel-dev/docs/10-glossary-and-handoff.md`
 → Strategy / Q&A archive: `docs/research/regulated-service-strategy.md`
 
+## Design Craft (UI/UX, non-AI-smell)
+For any UI work — design tokens, component patterns, "AI-generated look"
+avoidance — use the design-craft skill. Single-source guide for
+discoverability, typography, color (OKLCH), motion, accessibility (WCAG 2.2
+AA), and the 20-anti-pattern catalog that catches AI-template defaults.
+
+→ Skill entry: `.claude/skills/design-craft/SKILL.md`
+→ ★ AI-template anti-patterns (20 + 27-item self-audit): `.claude/skills/design-craft/docs/06-non-ai-smell.md`
+→ PR self-review checklist (58 items): `.claude/skills/design-craft/docs/10-review-checklist.md`
+→ Research evidence / Q&A archive: `docs/research/design-strategy.md`
+
 Volatile resource data (authority URLs, hotlines, form templates) lives
 in DB (`admin_resources`), never inlined in code or docs. Statute text is
 cached from `law.go.kr` OpenAPI. Rarely-changing global metadata lives in

@@ -52,14 +52,14 @@ Each slice (`features/`, `entities/`) has segments: `ui/ | model/ | api/ | lib/ 
 | Situation | Skill |
 |-----------|-------|
 | Any React/Next.js code | `/vercel-react-best-practices` |
-| UI components, pages, design decisions | `/ui-ux-pro-max` |
+| UI components, pages, design decisions | `design-craft` (`.claude/skills/design-craft/`) |
 
 **vercel-react-best-practices** covers 68 rules across 8 categories (waterfalls, bundle size, SSR, re-renders, etc.). Priority order: CRITICAL → HIGH → MEDIUM → LOW.
 
-**ui-ux-pro-max** covers accessibility, touch targets, color, typography, animation, responsive layout, and 50+ styles. Apply when the task changes how something looks, feels, moves, or is interacted with.
+**design-craft** covers Nielsen 10 / Norman 7 / Laws of UX, design tokens (OKLCH + the 5-category consensus from Material 3 / Apple HIG / Carbon / Tailwind / Radix), 10 measurable discoverability signals, motion duration bands, WCAG 2.2 AA, Korean/CJK typography, and a 20-anti-pattern catalog for "AI-generated look" avoidance. Apply when the task changes how something looks, feels, moves, or is interacted with.
 
 **If skills are not installed:**
 ```bash
-npx skills add nextlevelbuilder/ui-ux-pro-max-skill -y -a claude-code --skill ui-ux-pro-max
 npx skills add vercel-labs/agent-skills -y -a claude-code
 ```
+`design-craft` is local to this repo (`.claude/skills/design-craft/`); no install needed.
