@@ -19,14 +19,28 @@ These are the *minimum* conformance checkpoints. Audit before shipping.
 | Criterion | Name | Requirement | How to verify |
 |-----------|------|-------------|-----------------|
 | 1.4.3 | Contrast (Minimum) | 4.5:1 for normal text; 3:1 for large (18pt+ or bold 14pt+) | [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) |
+| **1.4.11** | Non-text Contrast (2.1 AA) | UI components, focus indicators, icon outlines ≥ 3:1 against adjacent | DevTools — measure button border, icon stroke, input border, focus ring |
 | **2.4.11** | Focus Visible (NEW in 2.2) | Keyboard focus outline ≥ 1px, background-to-outline contrast ≥ 3:1. **`outline: none` forbidden.** | Browser DevTools: Tab key must show visible ring on every interactive element |
+| **2.4.13** | Focus Appearance (NEW in 2.2 AAA) | Focus indicator ≥ 2 CSS px, contrast ≥ 3:1 against unfocused state + adjacent | DevTools — measure outline thickness + luminance change |
 | **2.5.8** | Target Size (NEW in 2.2 AA) | 24×24 CSS px minimum. iOS HIG 44×44 / Material 48×48 recommended. | Browser DevTools measure bounding box, or use `inspect element` |
 | 2.1.1 | Keyboard | All functionality available via keyboard. Tab order = visual order. | Tab through entire page; confirm no keyboard traps |
 | 2.3.3 | Animation from Interactions | `prefers-reduced-motion` supported. Auto-play ≤ 5s or user-triggered. | Browser Settings → Accessibility → motion preference |
 | 3.3.1 | Error Identification | Error is identified by text, not color alone. Message near the field. | Form validation error must include text description |
 | 1.3.5 | Input Purpose | `autocomplete` attributes on form fields (`email`, `password`, `tel`, etc.). | Inspect `<input autocomplete="...">` |
 
-**Judgment:** NEW in 2.2 are 2.4.11 (focus visible) and 2.5.8 (target size). These are the biggest shifts in 2.2 from 2.1. Enforce both.
+**Judgment:** NEW in 2.2 are 2.4.11 (focus visible AA) + 2.4.13 (focus
+appearance AAA) + 2.5.8 (target size AA). 1.4.11 (non-text contrast) has
+existed since 2.1 but is frequently missed — both focus indicator and icon
+outline must clear 3:1.
+
+### APCA vs WCAG
+
+WCAG 2.x AA (4.5:1 / 3:1) is the **compliance baseline**. APCA Lc is a
+W3C-draft design-quality target — used as an advisory metric only. A page
+that fails APCA but passes WCAG can still ship. APCA does, however, catch
+saturated-on-dark pairings that WCAG 2.x overrates, so for dark-mode
+design measure APCA as well. Threshold table and measurement tools live
+in `./04-typography-and-color.md` § 6.5.
 
 ---
 
@@ -453,6 +467,9 @@ Use these tools to audit accessibility. None require installation beyond what's 
 - [ ] All text has 4.5:1 contrast (or 3:1 for large text)
 - [ ] Focus outlines are visible on keyboard Tab (no `outline: none`)
 - [ ] Focus outline has ≥ 3:1 contrast against background
+- [ ] Non-text UI (icon stroke, button border, input border) ≥ 3:1 (WCAG 1.4.11)
+- [ ] Focus appearance ≥ 2 CSS px + 3:1 vs unfocused (WCAG 2.4.13, 2.2 AAA)
+- [ ] APCA Lc measured (advisory) — body text pairs at Lc ≥ 75, or size/weight compensated
 
 ### Touch & Motor
 - [ ] All buttons/interactive elements are ≥ 44×44 CSS px
@@ -510,8 +527,11 @@ Use these tools to audit accessibility. None require installation beyond what's 
 ## Sources
 
 - [W3C WCAG 2.2 Standard](https://www.w3.org/TR/WCAG22/)
+- [WCAG 2.1 AA — Non-text Contrast (1.4.11)](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html)
 - [WCAG 2.2 AA — Focus Visible (2.4.11)](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible)
+- [WCAG 2.2 AAA — Focus Appearance (2.4.13)](https://www.w3.org/WAI/WCAG22/Understanding/focus-appearance.html)
 - [WCAG 2.2 AA — Target Size (2.5.8)](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced)
+- [APCA in a Nutshell](https://github.com/Myndex/SAPC-APCA/blob/master/documentation/APCA-in-a-Nutshell.md)
 - [MDN Accessibility](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
 - [Apple Human Interface Guidelines — Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility)
 - [W3C Logical Properties (CSS Writing Modes)](https://www.w3.org/TR/css-logical-1/)

@@ -11,101 +11,97 @@
 
 <!--
   ┌─────────────────────────────────────────────────────────────────────────┐
-  │  anti-ai-design-test.v2.html — design-craft 스킬 검증용 v2 mock          │
-  │  Domain: Apple MacBook Pro (가상, 교육/검증 목적)                         │
-  │  Brand H: 25° (warm copper) — violet/cyan 200–270 밴드 밖                │
-  │  Reference: Apple MacBook Pro KR 페이지 IA + 리듬 차용                   │
+  │  anti-ai-design-test.v2.html — design-craft skill verification mock     │
+  │  Domain: Apple MacBook Pro (fictional, educational use only)            │
+  │  Brand: Apple system blue, OKLCH H 240. Cool gray neutral H 250.        │
+  │  Light mode only — no dark scheme.                                      │
+  │  Reference: apple.com/kr/macbook-pro IA + rhythm.                       │
   └─────────────────────────────────────────────────────────────────────────┘
 
   CHANGELOG vs v1 (anti-ai-design-test.html, koa pedals 1972)
   ─────────────────────────────────────────────────────────────────────────
-  본 파일은 v1 의 결함 5개 (F-1~F-5) 를 3 commit (C1/C2/C3) 으로 분리
-  수정한다. C1 (현재): alias layer 도입 + Apple MacBook 도메인.
+  Five v1 defects (F-1..F-5) split into three commits (C1/C2/C3):
 
-  - F-1 [C1, 시각 인상 zero]: alias layer 도입 (--color-text-primary 등).
-        primitive 보존. 컴포넌트 selector 는 alias 만 참조.
-  - F-2 [C3, 시각 인상 clear]:  prose 블록 max-width: 36–60ch.
-  - F-3 [C3, 시각 인상 clear]:  font-feature-settings "kern liga calt"
-                                body, "tnum lnum" spec table.
-  - F-4 [C2, 시각 인상 micro]:  ink-muted luminance 조정 → APCA Lc 75 통과.
-  - F-5 [C3, 시각 인상 clear]:  12 § 4 KR+Latin 매트릭스에 본 페어
-                                (Pretendard + Fraunces) row K-2 등록.
+  - F-1 [C1, visual zero]:    alias layer added (--color-text-primary etc.).
+                              Primitives preserved. Components reference
+                              alias only.
+  - F-2 [C3, visual clear]:   prose blocks max-width 36–60ch.
+  - F-3 [C3, visual clear]:   body font-feature-settings "kern liga calt".
+                              spec table "tnum lnum".
+  - F-4 [C2, visual micro]:   ink-muted luminance lowered → APCA Lc 75 pass.
+  - F-5 [C3, visual clear]:   12 § 4 KR+Latin matrix row K-2 registers
+                              this pair (Pretendard + Fraunces).
 
-  Intentional deviation (Pre-mortem 시나리오 1 mitigation, design-craft
-  SKILL.md core principle #7):
-  - hue 는 권장 안 (warm 25° copper) + display 폰트는 매트릭스 안 (Fraunces)
-    으로 안전하게 잡되, **brand-500 의 chroma 0.130 → 0.155 로 의도적
-    한 단계 push**. 11 § 1 Step 2 권장 0.12–0.18 범위 안에서 mid 가 아닌
-    상한 근처. mean-regression 회피.
+  Post-feedback revision (light-only, Apple palette):
+  - Removed dark-mode @media block entirely (per design decision).
+  - Brand hue 25° (warm copper) → 240° (Apple SF blue).
+  - Neutral hue 60° (warm) → 250° (cool gray, Apple style).
+  - Primary CTA: text-primary (black) → brand-500 (Apple blue).
 
-  APCA AUDIT TABLE (C2 commit — 추정 Lc 값, APCA tool 실측 권장)
-  Note: 컴플라이언스 baseline = WCAG 2.x AA. APCA Lc 는 advisory.
-  추정 = APCA W3 알고리즘의 luminance step 기반 근사. 실제 myndex.com/APCA/
-  로 페어별 검증 권장.
+  APCA AUDIT TABLE (estimated Lc, validate with myndex.com/APCA/)
+  Compliance baseline = WCAG 2.x AA. APCA Lc is advisory.
 
-  | pair                                    | bg OKLCH      | fg OKLCH      | est. Lc | target | status   |
-  |-----------------------------------------|---------------|---------------|---------|--------|----------|
-  | body on bg-base (light)                 | 97% 0.005 60  | 13% 0.006 60  |   ~95   |   75   | ✓ pass   |
-  | text-secondary on bg-base               | 97% 0.005 60  | 38% 0.011 60  |   ~78   |   75   | ✓ pass   |
-  | text-muted on bg-warm  (after C2 fix)   | 96% 0.012 30  | 42% 0.012 60  |   ~76   |   75   | ✓ pass   |
-  | text-emphasis (brand-700) on bg-base    | 97% 0.005 60  | 44% 0.130 25  |   ~76   |   75   | ✓ pass   |
-  | text-inverted on bg-deep                | 13% 0.006 60  | 97% 0.005 60  |   ~95   |   75   | ✓ pass   |
-  | display H1 on bg-base (Pretendard 900)  | 97% 0.005 60  | 13% 0.006 60  |   ~95   |   45   | ✓ pass   |
-  | nav link on bg-base                     | 92% 0.005 60  | 38% 0.011 60  |   ~75   |   75   | ✓ pass   |
-  | spec table th-muted on bg-base          | 99% 0.003 60  | 42% 0.012 60  |   ~78   |   75   | ✓ pass   |
-  | bento-cell-a body (neutral-200) on deep | 13% 0.006 60  | 88% 0.010 60  |   ~85   |   75   | ✓ pass   |
-  | dark mode body on bg-base               | 15% 0.008 60  | 95% 0.005 60  |   ~92   |   75   | ✓ pass   |
-  | dark mode text-emphasis on bg-base      | 15% 0.008 60  | 72% 0.110 25  |   ~62   |   60   | ✓ pass   |
+  | pair                                  | bg OKLCH         | fg OKLCH         | est. Lc | target | status   |
+  |---------------------------------------|------------------|------------------|---------|--------|----------|
+  | body on bg-base                       | 100% 0 0         | 11% 0.004 250    |   ~98   |   75   | ✓ pass   |
+  | text-secondary on bg-base             | 100% 0 0         | 35% 0.007 250    |   ~82   |   75   | ✓ pass   |
+  | text-muted on bg-soft                 | 96.5% 0.005 250  | 42% 0.008 250    |   ~78   |   75   | ✓ pass   |
+  | text-emphasis (brand-500) on bg-base  | 100% 0 0         | 58% 0.158 240    |   ~64   |   60   | ✓ pass   |
+  | text-inverted on bg-deep              | 11% 0.004 250    | 98% 0.003 250    |   ~98   |   75   | ✓ pass   |
+  | display H1 on bg-base (Pretendard 700)| 100% 0 0         | 11% 0.004 250    |   ~98   |   45   | ✓ pass   |
+  | nav link on bg-base                   | 95% 0.004 250    | 35% 0.007 250    |   ~78   |   75   | ✓ pass   |
+  | button-primary fg on brand-500 bg     | 58% 0.158 240    | 100% 0 0         |   ~76   |   75   | ✓ pass   |
+  | spec table th-muted on bg-base        | 100% 0 0         | 42% 0.008 250    |   ~80   |   75   | ✓ pass   |
+  | bento-cell-a body (neutral-200) deep  | 11% 0.004 250    | 90% 0.005 250    |   ~88   |   75   | ✓ pass   |
   APCA tool: https://www.myndex.com/APCA/
 
-  VISUAL IMPROVEMENTS vs v1 (≥ 3, C3 commit 이후)
-  1. Typography contrast — display: Fraunces italic 500 (h1 em / strip em /
-     bento__heading em / narrative em). body: Pretendard 400. Voice contrast
-     (12 § 2 Rule 1) 명확. weight gap 100 (italic 500 vs body 400) +
-     family contrast.
-  2. Color hierarchy — text-primary (~Lc 95) / text-secondary (~Lc 78) /
-     text-muted (~Lc 76, C2 fix 후) / text-emphasis (brand-700, ~Lc 76)
-     의 4-tier luminance gap 균등. v1 은 ink-muted Lc ~58 미달.
-  3. Numeric alignment — spec table th/td 모두 tabular-nums + lining-nums.
-     "3,290,000" 같은 큰 수가 등폭으로 정렬, v1 은 proportional figure.
-  4. Measure — bento__body 36ch / narrative__copy 38ch / hero__lede 38ch.
-     v1 의 bento body 는 일부 max-width 누락.
+  VISUAL IMPROVEMENTS vs v1 (4):
+  1. Typography contrast — display Fraunces italic 500 (hero em / strip em /
+     bento heading em / narrative em). Body Pretendard 400. Voice contrast
+     (12 § 2 Rule 1) explicit. Family + weight contrast both present.
+  2. Color hierarchy — 4-tier luminance: text-primary (Lc 98) /
+     text-secondary (Lc 82) / text-muted (Lc 78) / text-emphasis (Lc 64).
+     v1 ink-muted estimated Lc ~58 (failed).
+  3. Numeric alignment — spec table tabular-nums + lining-nums.
+     Large numbers ("3,290,000") align consistently. v1 used proportional.
+  4. Measure — bento__body 36ch, narrative__copy 38ch, hero__lede 38ch.
+     v1 missed several prose blocks.
 
-  Font pair 출처:
+  Font pair source:
   - Pretendard (KR body) + Fraunces (Latin display italic) → 12 § 4 row K-2
-    (KR body + Latin display 방향, 빈티지/heritage 톤)
-  - x-height ratio: Pretendard 0.520 / Fraunces 0.510 (gap 1.9%, ≤ 5% 통과)
+    (KR body + Latin display, vintage/heritage tone).
+  - x-height ratio: Pretendard 0.520 / Fraunces 0.510 (gap 1.9% ≤ 5%).
   - 12 § 2 Rule 1 (voice contrast: humanist sans + modern serif) ✓
-  - 12 § 2 Rule 2 (x-height match) ✓
-  - 12 § 2 Rule 3 (weight gap 500 italic vs 400) ✓
+  - 12 § 2 Rule 2 (x-height match)                              ✓
+  - 12 § 2 Rule 3 (weight gap 500 italic vs 400)                ✓
 -->
 
 <style>
   /* ─────────────────────────────────────────────────────────────────────
      PRIMITIVE LAYER (raw color/spacing tokens)
-     컴포넌트 selector 가 직접 참조하지 않음. alias 가 가리킴.
+     Components never reference primitives directly. Alias layer points here.
      ───────────────────────────────────────────────────────────────────── */
   :root {
-    /* Brand ramp — H 25 (warm copper). violet/cyan 밴드 밖 */
-    --color-brand-50:  oklch(97% 0.018 25);
-    --color-brand-100: oklch(93% 0.040 25);
-    --color-brand-200: oklch(87% 0.075 25);
-    --color-brand-300: oklch(78% 0.110 25);
-    --color-brand-500: oklch(60% 0.155 25);  /* primary, intentional deviation: chroma 상한 근처 */
-    --color-brand-700: oklch(44% 0.130 25);
-    --color-brand-900: oklch(26% 0.082 25);
+    /* Brand ramp — Apple system blue, H 240. Cool neutral hue family */
+    --color-brand-50:  oklch(97% 0.013 240);
+    --color-brand-100: oklch(93% 0.030 240);
+    --color-brand-200: oklch(86% 0.060 240);
+    --color-brand-300: oklch(76% 0.100 240);
+    --color-brand-500: oklch(58% 0.158 240);  /* primary — Apple SF blue */
+    --color-brand-700: oklch(44% 0.135 240);
+    --color-brand-900: oklch(28% 0.082 240);
 
-    /* Neutral — chroma 0.008–0.012 (≠ 0) — anti-pattern #3 회피 */
-    --color-neutral-0:   oklch(99% 0.003 60);
-    --color-neutral-50:  oklch(97% 0.005 60);
-    --color-neutral-100: oklch(94% 0.008 60);
-    --color-neutral-200: oklch(88% 0.010 60);
-    --color-neutral-400: oklch(70% 0.012 60);
-    --color-neutral-500: oklch(58% 0.012 60);
-    --color-neutral-600: oklch(42% 0.012 60);  /* C2 — APCA Lc 75 페어용 */
-    --color-neutral-700: oklch(38% 0.011 60);
-    --color-neutral-900: oklch(20% 0.008 60);
-    --color-neutral-950: oklch(13% 0.006 60);
+    /* Neutral — Apple-style cool gray, chroma 0.003–0.010 (never 0) */
+    --color-neutral-0:   oklch(100% 0 0);
+    --color-neutral-50:  oklch(98%  0.003 250);
+    --color-neutral-100: oklch(95%  0.004 250);
+    --color-neutral-200: oklch(90%  0.005 250);
+    --color-neutral-400: oklch(70%  0.007 250);
+    --color-neutral-500: oklch(55%  0.008 250);
+    --color-neutral-600: oklch(42%  0.008 250);  /* APCA Lc 75 pair target */
+    --color-neutral-700: oklch(35%  0.007 250);
+    --color-neutral-900: oklch(18%  0.005 250);
+    --color-neutral-950: oklch(11%  0.004 250);
 
     /* Semantic primitives */
     --color-success-500: oklch(60% 0.150 145);
@@ -146,32 +142,31 @@
 
     /* ───────────────────────────────────────────────────────────────────
        SEMANTIC ALIAS LAYER  (F-1 fix — C1 commit)
-       컴포넌트 selector 는 이 alias 만 참조한다. 다크모드는 이 layer 를
-       swap 하고 primitive 는 보존.
+       Components reference this layer only; primitives are preserved.
        ─────────────────────────────────────────────────────────────────── */
 
-    /* Surface */
-    --color-bg-base:      var(--color-neutral-50);
+    /* Surface — light only, no dark mode */
+    --color-bg-base:      var(--color-neutral-0);                /* page bg, near pure white (Apple style) */
     --color-bg-elevated:  var(--color-neutral-0);
-    --color-bg-warm:      oklch(96% 0.012 30);
-    --color-bg-band:      oklch(94% 0.014 28);
-    --color-bg-deep:      var(--color-neutral-950);
+    --color-bg-band:      var(--color-neutral-100);              /* tagline strip */
+    --color-bg-soft:      oklch(96.5% 0.005 250);                /* hero radial focus */
+    --color-bg-deep:      var(--color-neutral-950);              /* final CTA + bento featured */
 
     /* Ink (text) */
     --color-text-primary:    var(--color-neutral-950);
     --color-text-secondary:  var(--color-neutral-700);
-    --color-text-muted:      var(--color-neutral-600);  /* C2 — was neutral-500, lifted for APCA Lc 75 */
+    --color-text-muted:      var(--color-neutral-600);
     --color-text-inverted:   var(--color-neutral-50);
-    --color-text-emphasis:   var(--color-brand-700);
+    --color-text-emphasis:   var(--color-brand-500);             /* Apple system blue */
 
     /* Border */
-    --color-border-subtle: oklch(85% 0.010 60);
-    --color-border-focus:  var(--color-brand-700);
+    --color-border-subtle: oklch(90% 0.005 250);
+    --color-border-focus:  var(--color-brand-500);
 
-    /* Component alias */
-    --button-primary-bg:        var(--color-text-primary);
-    --button-primary-fg:        var(--color-text-inverted);
-    --button-primary-bg-hover:  var(--color-brand-900);
+    /* Component alias — Apple-style blue CTA on light surface */
+    --button-primary-bg:        var(--color-brand-500);
+    --button-primary-fg:        var(--color-neutral-0);
+    --button-primary-bg-hover:  var(--color-brand-700);
 
     /* Shadow alias */
     --shadow-raised:
@@ -197,7 +192,7 @@
     background: var(--color-bg-base);
     word-break: keep-all;
     line-break: strict;
-    /* C3 — F-3 fix: kern liga calt 활성. tnum/lnum 은 spec table 에서 별도 */
+    /* C3 — F-3 fix: enable kern/liga/calt. tnum/lnum applied separately to spec table */
     font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -341,7 +336,7 @@
     padding: 96px var(--space-4) 64px;
     text-align: center;
     background:
-      radial-gradient(60% 40% at 50% 30%, var(--color-bg-warm) 0%, transparent 70%),
+      radial-gradient(60% 40% at 50% 30%, var(--color-bg-soft) 0%, transparent 70%),
       var(--color-bg-base);
     overflow: hidden;
   }
@@ -381,7 +376,7 @@
     width: min(680px, 84vw);
     height: 320px;
     border-radius: var(--radius-4);
-    background: linear-gradient(180deg, var(--color-neutral-100) 0%, var(--color-bg-warm) 100%);
+    background: linear-gradient(180deg, var(--color-neutral-100) 0%, var(--color-bg-soft) 100%);
     display: grid;
     place-items: center;
     box-shadow: var(--shadow-overlay);
@@ -494,7 +489,7 @@
     border-color: var(--color-bg-deep);
   }
   .bento__cell--b { grid-area: feat-b; }
-  .bento__cell--c { grid-area: feat-c; background: var(--color-bg-warm); }
+  .bento__cell--c { grid-area: feat-c; background: var(--color-bg-soft); }
 
   .bento__label {
     font-family: "Fraunces", Georgia, serif;
@@ -520,12 +515,12 @@
     font-size: var(--text-base);
     line-height: 1.7;
     color: var(--color-text-secondary);
-    /* C3 — F-2 fix: prose measure 36ch (한글 ≈ 28자) */
+    /* C3 — F-2 fix: prose measure 36ch (≈ 28 Hangul characters) */
     max-width: 36ch;
   }
   .bento__cell--a .bento__body {
     color: var(--color-neutral-200);
-    max-width: 44ch;  /* 큰 셀이라 약간 longer */
+    max-width: 44ch;  /* larger cell, slightly longer measure */
   }
   .bento__diagram {
     align-self: flex-end;
@@ -578,7 +573,7 @@
   }
   .narrative__visual {
     aspect-ratio: 4 / 5;
-    background: linear-gradient(160deg, var(--color-bg-warm), var(--color-bg-band));
+    background: linear-gradient(160deg, var(--color-bg-soft), var(--color-bg-band));
     border-radius: var(--radius-4);
     box-shadow: var(--shadow-raised);
     display: grid;
@@ -632,7 +627,7 @@
     color: var(--color-text-primary);
     font-family: "Fraunces", Georgia, serif;
     font-weight: 500;
-    /* C3 — F-3 fix: 표 숫자 등폭 정렬 (tabular figures, lining) */
+    /* C3 — F-3 fix: tabular figures + lining nums for table number alignment */
     font-feature-settings: "tnum" 1, "lnum" 1, "kern" 1;
     font-variant-numeric: tabular-nums lining-nums;
   }
@@ -640,7 +635,7 @@
     font-feature-settings: "tnum" 1, "lnum" 1, "kern" 1;
   }
   .spec__table tr:hover {
-    background: color-mix(in oklch, var(--color-bg-warm) 60%, transparent);
+    background: color-mix(in oklch, var(--color-bg-soft) 60%, transparent);
   }
   .spec__table tr.is-emphasis td {
     color: var(--color-text-emphasis);
@@ -762,36 +757,7 @@
     .footer__inner { grid-template-columns: 1fr; }
   }
 
-  /* ─────────────────────────────────────────────────────────────────────
-     DARK MODE — alias swap (primitive 그대로)
-     ───────────────────────────────────────────────────────────────────── */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-bg-base:      oklch(15% 0.008 60);
-      --color-bg-elevated:  oklch(19% 0.010 60);
-      --color-bg-warm:      oklch(22% 0.018 30);
-      --color-bg-band:      oklch(20% 0.016 28);
-      --color-bg-deep:      oklch(10% 0.005 60);
-
-      --color-text-primary:    oklch(95% 0.005 60);
-      --color-text-secondary:  oklch(78% 0.009 60);
-      --color-text-muted:      oklch(60% 0.010 60);
-      --color-text-inverted:   oklch(15% 0.008 60);
-      --color-text-emphasis:   oklch(72% 0.110 25);
-
-      --color-border-subtle: oklch(30% 0.010 60);
-      --color-border-focus:  oklch(72% 0.110 25);
-
-      --button-primary-bg:        oklch(72% 0.110 25);
-      --button-primary-fg:        oklch(13% 0.006 60);
-      --button-primary-bg-hover:  oklch(80% 0.090 25);
-
-      --shadow-raised: none;
-      --shadow-overlay: none;
-    }
-    .bento__cell--a { background: oklch(22% 0.022 25); border-color: oklch(28% 0.020 25); color: var(--color-text-primary); }
-    .bento__cell--a .bento__body { color: var(--color-text-secondary); }
-  }
+  /* No dark mode — light only (per design decision: Apple-inspired clean light surface). */
 </style>
 </head>
 <body>
