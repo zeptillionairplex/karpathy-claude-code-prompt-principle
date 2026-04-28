@@ -123,6 +123,85 @@ the variable weight range is exploited (200 to 900). Source:
 
 ---
 
+## 3.5 Legibility — measurable defaults
+
+`./12-font-pairing.md` answers the pair decision; this § measures whether
+the resulting pair is **actually legible**. Avoids vague claims like
+"text visibility."
+
+### Measure (line length)
+
+- **Latin body:** 45–90 characters (Butterick, [Practical Typography](https://practicaltypography.com/line-length.html))
+- **Korean body:** 28–45 Hangul characters (one Hangul block ≈ width of two Latin characters)
+- **CSS:** `max-width: 36–60ch` as the default for prose blocks. The `ch`
+  unit is keyed to the font's `0` glyph width, so it auto-adjusts when
+  the font changes.
+
+### x-height matching (when pairing)
+
+Two-font pair: x-height ratio gap ≤ 5%. Same rule as `./12-font-pairing.md` § 2 Rule 2.
+
+### Letter-spacing — quantitative table
+
+| Size | Recommended letter-spacing | Source |
+|---|---|---|
+| Display ≥ 32px | -0.04em ~ -0.02em | Refactoring UI |
+| Heading 24–32px | -0.02em ~ 0 | Material 3 |
+| Body 16–20px | 0 (default) | Butterick |
+| Small 12–14px | +0.01em | Butterick |
+| Small caps / all caps | +0.05em ~ +0.12em (5–12%) | Butterick |
+
+### font-feature-settings in practice
+
+```css
+body {
+  font-feature-settings:
+    "kern" 1,    /* kerning — always on */
+    "liga" 1,    /* standard ligatures (fi, fl) */
+    "clig" 1,    /* contextual ligatures */
+    "calt" 1;    /* contextual alternates */
+}
+
+.spec-table td,
+.spec-table th {
+  font-feature-settings:
+    "tnum" 1,    /* tabular numerals — aligned digits in tables */
+    "lnum" 1;    /* lining numerals (cap-height digits) */
+}
+
+.editorial h1 {
+  font-feature-settings: "ss01" 1;  /* stylistic set — Inter's single-storey a */
+}
+```
+
+| Feature | Effect | When to use |
+|---|---|---|
+| `kern` | Automatic letter-pair spacing | Always |
+| `liga` | Standard ligatures (fi → ﬁ) | Body copy |
+| `tnum` | Tabular figures (aligned columns) | Spec tables, prices |
+| `lnum` | Cap-height digits (vs onum old-style) | UI |
+| `ss01`–`ss20` | Font-specific stylistic sets | Emphasis, editorial |
+| `case` | Punctuation positioning for all-caps | All-caps headings |
+
+### Optical sizing
+
+`font-optical-sizing: auto` — when a variable font exposes an `opsz` axis,
+the glyph adapts to the size (e.g. Fraunces at 9pt body vs 144pt display).
+
+### Reading rhythm — line-height by element
+
+| Element | line-height |
+|---|---|
+| Display (48–96px) | 1.0–1.1 |
+| Heading (24–40px) | 1.15–1.25 |
+| Body Latin (16–18px) | 1.5–1.7 |
+| Body Korean | 1.6–1.8 |
+| Long-form prose | 1.7–1.8 |
+
+**Source:** [Practical Typography — measure](https://practicaltypography.com/line-length.html),
+[MDN — font-feature-settings](https://developer.mozilla.org/en-US/docs/Web/CSS/font-feature-settings),
+[Refactoring UI](https://www.refactoringui.com/).
+
 ## 4. Line height & letter spacing
 
 Measurable defaults that work without further tuning.
@@ -151,37 +230,22 @@ close to the next line's *choseong* (initial consonant).
 
 ---
 
-## 5. OKLCH — why it beats HSL/RGB
+## 5. OKLCH (entry-pointer)
 
-OKLCH is perceptually uniform: equal numerical changes in L (lightness) feel
-like equal visual changes in brightness. HSL and RGB are not — the same `L`
-in HSL looks brighter at hue 60° (yellow) than hue 240° (blue).
+OKLCH is perceptually uniform — the same L value reads as the same visual
+brightness regardless of hue. HSL/RGB is not: hue 60° (yellow) appears
+brighter than hue 240° (blue) at the same L (the direct root of
+anti-pattern #3).
 
-### What this enables
+**Practical rule:** Define new tokens in OKLCH. Convert with [oklch.com](https://oklch.com/).
 
-```css
-/* HSL: same L=50, but yellow looks brighter than blue */
---bad-yellow: hsl(60deg 100% 50%);
---bad-blue:   hsl(240deg 100% 50%);
+**Adoption (2024+):** Tailwind v4, Radix, and shadcn have all moved to
+OKLCH. All modern browsers support it.
 
-/* OKLCH: same L=70, both feel equally bright */
---ok-yellow: oklch(70% 0.18 90);
---ok-blue:   oklch(70% 0.18 250);
-```
+→ Brand-H decision tree, 7-category harmony, 60-30-10 ratio, and dark-mode
+luminance mapping → `./11-color-system.md` § 1, § 2, § 3, § 5.
 
-### Adoption
-
-| System | Status | Date |
-|--------|--------|------|
-| Tailwind v4 | All built-in colors are OKLCH | 2024 |
-| Radix Colors | OKLCH-generated | 2024 |
-| shadcn/ui | Adopts via Tailwind v4 / Radix | 2024+ |
-| Atlassian | Migrating from sRGB | ongoing |
-| Browser support | All modern browsers | 2023+ |
-
-Practical rule: **define new tokens in OKLCH**. Convert legacy hex via
-[oklch.com](https://oklch.com/). For browser-fallback, use a build step or
-ship a hex fallback alongside.
+**Source:** [Evil Martians — OKLCH in CSS](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl).
 
 ---
 
@@ -206,6 +270,95 @@ ship a hex fallback alongside.
 Glassmorphism (`backdrop-blur-xl` + `bg-white/10`) on top of varied content
 puts text against multiple backgrounds simultaneously. WCAG AA contrast is
 nearly impossible to maintain. See `./06-non-ai-smell.md` #12.
+
+## 6.5 APCA (WCAG 3 candidate) — advisory metric
+
+**Compliance baseline = WCAG 2.x AA 4.5/3.** APCA is advisory — a page
+that fails APCA but clears WCAG can still ship. APCA does, however, catch
+the saturated-on-dark legibility issue that WCAG 2.x over-rates in dark
+mode.
+
+### APCA Lc threshold table
+
+| Lc value | Meaning | Size |
+|---|---|---|
+| Lc 90 | body, all sizes | 8px+ |
+| Lc 75 | body, 16px / weight ≥ 500 | 16px |
+| Lc 60 | body, 24px / weight ≥ 400 | 24px |
+| Lc 45 | display, 36px / weight ≥ 400 | 36px |
+| Lc 30 | placeholder, non-essential text | 18px+ |
+| Lc 15 | non-text UI elements (icon outline, etc.) | — |
+
+**Measurement tools:**
+- [APCA contrast tool](https://www.myndex.com/APCA/) (apcacontrast.com)
+- [color.review](https://color.review/) — WCAG + APCA side by side
+- [Stark](https://www.getstark.co/) — Figma / browser
+
+### Dark-mode example (where WCAG over-rates)
+
+`oklch(70% 0.20 250)` body on `oklch(15%)` surface — WCAG 2.x: 8:1 PASS.
+APCA Lc: 65 (fails the 16px / 75 target). Visually the saturated blue
+fuzzes out — APCA catches the difference WCAG misses.
+
+**Source:** [APCA in a Nutshell](https://github.com/Myndex/SAPC-APCA/blob/master/documentation/APCA-in-a-Nutshell.md),
+[APCA Readability Criterion](https://readtech.org/ARC/).
+
+## 6.6 Non-text UI contrast (WCAG 1.4.11)
+
+WCAG 1.4.11 — UI components, icon outlines, and focus indicators must
+clear **3:1** contrast against adjacent regions.
+
+### Focus indicator (WCAG 2.4.13, 2.2 AAA)
+
+```css
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);  /* 2 CSS px minimum */
+  outline-offset: 2px;
+  /* contrast against adjacent background ≥ 3:1 */
+}
+```
+
+- Thickness ≥ 2 CSS px
+- 3:1 contrast vs adjacent regions (button bg + outer bg)
+- Color change alone is not enough — the outline / ring must change visually
+
+### Icon outline / border
+
+Icon-only buttons (search, close, menu) → the icon stroke must clear 3:1
+against the background. Example: `oklch(50%)` icon on `oklch(60%)`
+background = 1.4:1 (FAIL).
+
+## 6.7 Color blindness simulation
+
+8% of males and 0.5% of females have some form of color blindness. State
+identification (success / error / warning) by color alone fails for them.
+
+### Mandatory four-mode simulation
+
+| Type | Population share | Effect |
+|---|---|---|
+| Deuteranopia (green-deficient) | 6% males | Most common. Poor red/green separation. |
+| Protanopia (red-deficient) | 1% males | Reds appear darker |
+| Tritanopia (blue-deficient) | < 0.1% | Blue/yellow confusion |
+| Achromatopsia (total) | rare | All color collapses to luminance |
+
+### Tools
+
+- [Stark](https://www.getstark.co/) — Figma / browser, all four modes simultaneously
+- [Sim Daltonism (macOS)](https://michelf.ca/projects/sim-daltonism/)
+- Chrome DevTools "Rendering > Emulate vision deficiencies"
+
+### Pass criteria
+
+1. Under grayscale (achromatopsia) text remains readable and state
+   identification is preserved.
+2. Under deuteranopia, success (green) and error (red) are still
+   distinguishable — reinforce with icon/text beyond color
+   (`./07-accessibility-and-i18n.md` § "Color is not the only signal").
+3. Under protanopia, the brand color does not wash out.
+
+**Source:** [Stark Documentation](https://www.getstark.co/learn/),
+[NVDA/JAWS — Vision deficiency testing](https://www.tpgi.com/color-contrast-analyzer/).
 
 ---
 
@@ -313,6 +466,11 @@ Paste into PR for any typography- or color-changing PR.
 - [ ] No hero subhead uses a gradient text fill from violet to cyan
 - [ ] Korean body (if any) has `line-height ≥ 1.6` and `word-break: keep-all`
 - [ ] Line-height respects element size (display 1.0–1.1, body 1.5–1.7)
+- [ ] Prose blocks `max-width: 36–60ch` (Latin) / 28–45 Hangul characters
+- [ ] Body has `font-feature-settings: "kern" 1, "liga" 1` enabled
+- [ ] Spec/numeric tables have `font-feature-settings: "tnum" 1` enabled
+- [ ] x-height ratio gap ≤ 5% when pairing fonts
+- [ ] Letter-spacing follows the table (display -0.02em / body 0 / all-caps +5–12%)
 
 ### Color
 - [ ] Tokens are defined in OKLCH (or a documented reason otherwise)
@@ -320,6 +478,9 @@ Paste into PR for any typography- or color-changing PR.
 - [ ] Brand primary is NOT the shadcn default (#6366f1 / #8B5CF6)
 - [ ] WCAG AA contrast verified for all text against its background
 - [ ] No `backdrop-blur-xl` with `bg-white/10` on the primary text-bearing surface
+- [ ] APCA Lc 75 advisory pair measurement (body 16px) — compensate via size/weight if it fails
+- [ ] Non-text UI contrast ≥ 3:1 (WCAG 1.4.11) — focus indicator + icon outline
+- [ ] Color-blindness simulation passes in all four modes (deutero/proto/trito/grayscale)
 
 ### Dark mode
 - [ ] Elevation in dark mode comes from luminance steps, not shadows
@@ -341,4 +502,18 @@ Paste into PR for any typography- or color-changing PR.
 - [Refactoring UI](https://www.refactoringui.com/)
 - [Pretendard project](https://github.com/orioncactus/pretendard) — Korean typeface
 - [Simon Hearne — Avoiding Layout Shifts from Web Fonts](https://simonhearne.com/2021/layout-shifts-webfonts/)
+- [Practical Typography — measure](https://practicaltypography.com/line-length.html)
+- [MDN — font-feature-settings](https://developer.mozilla.org/en-US/docs/Web/CSS/font-feature-settings)
+- [APCA in a Nutshell](https://github.com/Myndex/SAPC-APCA/blob/master/documentation/APCA-in-a-Nutshell.md)
+- [APCA Readability Criterion](https://readtech.org/ARC/)
+- [color.review (Lea Verou)](https://color.review/)
+- [Stark — vision deficiency tool](https://www.getstark.co/)
 - Research evidence: `../../../docs/research/design-strategy.md` § 2.5, § 3.4
+
+## Refresh policy
+
+Review once per quarter. Triggers for change: W3C ratification of APCA
+(currently draft), Practical Typography updating its measure
+recommendation, or new font-feature-settings features becoming standard.
+
+**Last updated:** 2026-04-29

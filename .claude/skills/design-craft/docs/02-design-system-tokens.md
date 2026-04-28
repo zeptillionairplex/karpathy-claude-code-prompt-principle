@@ -207,61 +207,38 @@ Re-using light-mode shadows in dark mode is anti-pattern #20 in
 
 ---
 
-## 5. Color ramp
+## 5. Color ramp (entry-pointer)
 
-### Comparison
+**Default color ramp = 11-step OKLCH, neutral chroma 0.005–0.015**, plus
+four semantics (error H 0–10 / warning 35–50 / success 100–145 / info
+200–230). This doc only fixes the resulting tokens — the **decision
+procedure** (how to pick brand H, which harmony category for the accent,
+60-30-10 ratio, etc.) lives elsewhere.
 
-| System | Steps | Color space | Neutral gray |
-|--------|-------|-------------|--------------|
-| Material 3 | 13 (HCT tone 0–100) | HCT | hue-linked tonal |
-| Apple HIG | 9 semantic + 6 gray | sRGB / P3 | system gray (6 stops) |
-| IBM Carbon | 10 (10–100) | HSL | cool / warm gray split |
-| Atlassian | 11 (50–1100) | sRGB → OKLCH transitioning | neutral |
-| Polaris | 13 (50–1300) | sRGB | neutral |
-| GOV.UK | < 5 | sRGB | pure achromatic |
-| Vercel Geist | ~12 | sRGB | pure gray |
-| **Tailwind v4** | 11 (50–950) | **OKLCH** | slight cool tint (chroma ≈ 0.003–0.046) |
-| **Radix Colors** | 12 (1–12) | **OKLCH** | 4 neutrals: slate / sage / olive / sand |
-| shadcn/ui | inherits Radix | inherits | — |
-| Bootstrap 5 | 9 (100–900) | HEX/RGB | pure gray |
+→ Decision procedure (5-step + 7-category harmony + 60-30-10): `./11-color-system.md`
+→ Why OKLCH beats HSL/RGB + dark-mode luminance mapping: `./04-typography-and-color.md` § 5–7
 
-### Default recommendation
-
-- **11–12 steps** (Tailwind 50–950 or Radix 1–12 are the de-facto standards)
-- **OKLCH color space** — perceptually uniform, the new convergent default since 2024
-- **Neutral with slight cool chroma** (chroma 0.005–0.015) — pure 0-chroma gray feels sterile
-- **Semantic hues** with consensus ranges:
-  - error: H 0°–10°
-  - warning: H 35°–50°
-  - success: H 100°–145°
-  - info: H 200°–230°
+### Default token shape (what `./11-color-system.md` prescribes)
 
 ```css
 :root {
-  /* Brand — define one hue and ramp from it */
-  --brand-50:  oklch(97% 0.02 250);
-  --brand-100: oklch(94% 0.04 250);
-  --brand-300: oklch(78% 0.12 250);
-  --brand-500: oklch(60% 0.18 250);  /* primary */
-  --brand-700: oklch(45% 0.16 250);
-  --brand-900: oklch(28% 0.10 250);
+  /* Brand — H decided in 11 § 1 Step 1 (avoid the 200–270 band) */
+  --brand-500: oklch(62% 0.142 35);    /* example: amber, H=35 */
 
-  /* Neutral with slight cool tint (matches Tailwind v4 gray) */
-  --neutral-50:  oklch(98% 0.005 250);
-  --neutral-200: oklch(88% 0.008 250);
-  --neutral-500: oklch(60% 0.012 250);
-  --neutral-800: oklch(28% 0.010 250);
-  --neutral-950: oklch(15% 0.008 250);
+  /* Neutral chroma 0.005–0.015 (avoid anti-pattern #3, never 0) */
+  --neutral-50:  oklch(97% 0.005 80);
+  --neutral-500: oklch(58% 0.012 80);
+  --neutral-950: oklch(13% 0.006 80);
 
-  /* Semantic — anchor on the consensus hue ranges */
-  --color-error:   oklch(60% 0.20 25);   /* red */
-  --color-warning: oklch(70% 0.16 70);   /* amber */
-  --color-success: oklch(60% 0.15 145);  /* green */
-  --color-info:    oklch(60% 0.15 230);  /* blue */
+  /* Semantic — H gap ≥ 10° from brand (avoid collision, 11 § 4) */
+  --color-error:   oklch(58% 0.190 25);
+  --color-warning: oklch(70% 0.160 50);
+  --color-success: oklch(60% 0.150 145);
+  --color-info:    oklch(60% 0.150 220);
 }
 ```
 
-Source for OKLCH adoption: [Evil Martians — OKLCH in CSS](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl).
+**Source:** [Evil Martians — OKLCH in CSS](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl). Rationale / 7-category harmony / 60-30-10 / dark-mode mapping → `./11-color-system.md`.
 
 ---
 
@@ -325,6 +302,159 @@ A complete starter `:root` block combining all five categories:
 
 ---
 
+## 7. Token taxonomy (3-tier)
+
+§ 1–6 answer "what value." § 7 answers **how to name and layer that
+value** — the reliability core of any production token system. Maps
+1-to-1 onto Material 3's ref / sys / comp.
+
+| Tier | Naming | Responsibility | Example |
+|---|---|---|---|
+| **Primitive (raw)** | hue+shade — `--color-amber-500` | The color's own name. Defined once for the whole system. Components must never reference it directly. | `--color-amber-500: oklch(62% 0.142 45);` |
+| **Semantic (alias)** | intent — `--color-text-primary` | Meaning. Points to different primitives in light vs dark. The layer components reference. | `--color-text-primary: var(--color-amber-950);` |
+| **Component** | component + property + state — `--button-primary-bg` | Component-scoped alias. Sibling of semantic; introduce when you need per-component overrides. | `--button-primary-bg: var(--color-text-primary);` |
+
+**Benefits of 3-tier:**
+- **Dark-mode swap** — only semantic aliases swap; primitives and components are untouched.
+- **Rebranding** — change primitive H once and the whole system updates.
+- **Component re-theme** — only the component layer changes; semantic and primitive remain.
+
+**Single-file mock limitation:** in a single HTML mock the component layer
+is verbose overhead. In mocks, stop at **2-tier (primitive + alias)**;
+introduce the component layer in multi-file production (React/Vue
+components). The mock's selectors must still reference aliases only —
+direct primitive reference is anti-pattern #22.
+
+**Source:** [Material 3 — Token system](https://m3.material.io/foundations/design-tokens/overview),
+[Atlassian — Token naming taxonomy](https://atlassian.design/tokens/all-tokens/).
+
+## 8. Naming convention
+
+### Good names vs bad names
+
+| ❌ Primitive name in component CSS | ✅ Semantic alias |
+|---|---|
+| `color: var(--neutral-950);` | `color: var(--color-text-primary);` |
+| `background: var(--gray-50);` | `background: var(--color-bg-input);` |
+| `padding: var(--space-3);` | `padding: var(--space-card-inner);` |
+| `border: 1px solid var(--blue-500);` | `border: 1px solid var(--color-border-focus);` |
+
+**Why?** `--neutral-950` in page code means "how should this swap in dark
+mode?" must be decided per component. With the semantic alias
+`--color-text-primary`, only the alias swaps when the theme changes.
+
+→ anti-pattern #22 (new): direct primitive-token reference. → `./06-non-ai-smell.md`.
+
+### Naming pattern (kebab-case + scope-prefix + state-suffix)
+
+```text
+{scope}-{role}-{variant?}-{state?}
+
+color-text-primary
+color-text-primary-hover
+color-bg-surface-raised
+color-border-focus
+space-card-inner
+space-section-y
+radius-button
+shadow-overlay
+```
+
+**Rules:**
+- `kebab-case` (the CSS-variable convention)
+- `scope-prefix`: color / space / text / radius / shadow / motion
+- `role`: text / bg / border / surface, etc.
+- `variant`: primary / secondary / muted / inverted
+- `state-suffix`: -hover / -active / -disabled / -focus
+
+**Source:** [Atlassian — Token naming](https://atlassian.design/foundations/design-tokens/),
+[shadcn/ui — Theming](https://ui.shadcn.com/docs/theming).
+
+## 9. DTCG (Design Tokens Community Group) compatibility
+
+The W3C-track JSON format for design tokens. Tools like Style Dictionary
+and Tokens Studio convert one JSON source into CSS variables, Sass mixins,
+Tailwind config, iOS tokens, and Android tokens in one pass.
+
+```json
+{
+  "color": {
+    "amber": {
+      "500": { "$value": "oklch(62% 0.142 45)", "$type": "color" },
+      "950": { "$value": "oklch(13% 0.006 45)", "$type": "color" }
+    },
+    "text": {
+      "primary": { "$value": "{color.amber.950}", "$type": "color" }
+    }
+  },
+  "space": {
+    "3": { "$value": "16px", "$type": "dimension" }
+  }
+}
+```
+
+`$value` + `$type` + reference (`{...}`) are the three DTCG essentials.
+Pipeline: JSON → Style Dictionary → CSS variables / Sass mixins / Tailwind
+extend.colors / iOS Swift / Android XML.
+
+**Source:** [Design Tokens Format Module (W3C draft)](https://tr.designtokens.org/format/),
+[Style Dictionary](https://amzn.github.io/style-dictionary/),
+[Tokens Studio for Figma](https://tokens.studio/).
+
+## 10. Token-system comparison
+
+| System | Tier structure | Naming | Dark mapping | Primary use |
+|---|---|---|---|---|
+| **Material 3** | ref / sys / comp | role-based (`md.sys.color.primary`) | tonal-surface, automatic | Android, Material apps |
+| **Apple HIG** | semantic only (system) | UIColor.label / UIColor.systemBackground | system-managed (auto) | iOS / macOS |
+| **Atlassian** | global / alias / component | dot-notation (`color.text.subtle`) | alias swap | Atlassian products |
+| **shadcn/ui** | semantic only (CSS var) | `--primary`, `--muted-foreground` | `.dark` class swap | React + Tailwind |
+| **Tailwind v4** | primitive (utility) | `bg-amber-500`, `text-gray-50` | `dark:` prefix | Utility-first projects |
+| **Radix Colors** | primitive scale (1–12) | `amber.5`, `slate.11` | separate dark scale | Theme-aware components |
+
+**How to choose:**
+- Building a full design system → Material 3 or Atlassian.
+- React + Tailwind → shadcn/ui (semantic) + Tailwind v4 (primitives).
+- Multi-platform (iOS/Android/Web) → DTCG JSON + Style Dictionary.
+
+## 11. Theme switching
+
+```css
+:root {
+  /* Primitives — identical in light and dark, never swapped */
+  --color-amber-500: oklch(62% 0.142 45);
+  --color-amber-950: oklch(13% 0.006 45);
+  --color-amber-100: oklch(94% 0.045 45);
+
+  /* Semantic alias — light mode default */
+  --color-text-primary: var(--color-amber-950);
+  --color-bg-surface:   var(--color-amber-100);
+}
+
+[data-theme="dark"] {
+  /* Only semantic aliases swap; primitives stay */
+  --color-text-primary: var(--color-amber-100);
+  --color-bg-surface:   var(--color-amber-950);
+}
+
+/* User preference fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-text-primary: var(--color-amber-100);
+    --color-bg-surface:   var(--color-amber-950);
+  }
+}
+```
+
+Combine the **`data-theme` attribute** with `prefers-color-scheme`. If the
+user explicitly toggled light/dark, the attribute wins; otherwise the page
+follows the OS preference.
+
+**Source:** [Josh Comeau — Color Modes guide](https://www.joshwcomeau.com/react/dark-mode/),
+[shadcn/ui — Dark mode](https://ui.shadcn.com/docs/dark-mode).
+
+---
+
 ## Self-audit checklist
 
 Paste into PR description for any token-defining or token-changing PR.
@@ -356,6 +486,13 @@ Paste into PR description for any token-defining or token-changing PR.
 - [ ] Brand primary is NOT shadcn `--primary` default (#6366f1 / #8B5CF6)
 - [ ] At least 11 steps in the ramp
 
+### Tokens (taxonomy + naming + DTCG)
+- [ ] Primitive layer (raw `--color-amber-500`) and semantic alias (`--color-text-primary`) are separated
+- [ ] Component selectors reference aliases only — zero direct primitive references (anti-pattern #22)
+- [ ] Naming pattern `{scope}-{role}-{variant}-{state}` (kebab-case)
+- [ ] Theme switching swaps aliases (primitives preserved)
+- [ ] Tokens can be exported as DTCG-compatible JSON (production criterion)
+
 ---
 
 ## Sources
@@ -378,4 +515,17 @@ Paste into PR description for any token-defining or token-changing PR.
 - [shadcn/ui — Theming](https://ui.shadcn.com/docs/theming)
 - [Vercel Geist — Typography](https://vercel.com/geist/typography)
 - [Evil Martians — OKLCH in CSS](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl)
+- [Material 3 — Design tokens](https://m3.material.io/foundations/design-tokens/overview)
+- [Atlassian — Token taxonomy](https://atlassian.design/tokens/all-tokens/)
+- [Design Tokens Format Module (W3C)](https://tr.designtokens.org/format/)
+- [Style Dictionary](https://amzn.github.io/style-dictionary/)
+- [Tokens Studio for Figma](https://tokens.studio/)
+- [Josh Comeau — Color Modes](https://www.joshwcomeau.com/react/dark-mode/)
 - Research evidence: `../../../docs/research/design-strategy.md` § 2
+
+## Refresh policy
+
+Review once per quarter. Triggers for change: DTCG ratification by W3C,
+Material 3 token-spec updates, or a shadcn-ui token-taxonomy change.
+
+**Last updated:** 2026-04-29
