@@ -38,10 +38,24 @@
     한 단계 push**. 11 § 1 Step 2 권장 0.12–0.18 범위 안에서 mid 가 아닌
     상한 근처. mean-regression 회피.
 
-  APCA AUDIT TABLE (placeholder — C2 에서 채워짐)
-  | pair | bg OKLCH | fg OKLCH | computed Lc | target Lc | pass |
-  |------|----------|----------|-------------|-----------|------|
-  | TBD | TBD | TBD | TBD | 75 | TBD |
+  APCA AUDIT TABLE (C2 commit — 추정 Lc 값, APCA tool 실측 권장)
+  Note: 컴플라이언스 baseline = WCAG 2.x AA. APCA Lc 는 advisory.
+  추정 = APCA W3 알고리즘의 luminance step 기반 근사. 실제 myndex.com/APCA/
+  로 페어별 검증 권장.
+
+  | pair                                    | bg OKLCH      | fg OKLCH      | est. Lc | target | status   |
+  |-----------------------------------------|---------------|---------------|---------|--------|----------|
+  | body on bg-base (light)                 | 97% 0.005 60  | 13% 0.006 60  |   ~95   |   75   | ✓ pass   |
+  | text-secondary on bg-base               | 97% 0.005 60  | 38% 0.011 60  |   ~78   |   75   | ✓ pass   |
+  | text-muted on bg-warm  (after C2 fix)   | 96% 0.012 30  | 42% 0.012 60  |   ~76   |   75   | ✓ pass   |
+  | text-emphasis (brand-700) on bg-base    | 97% 0.005 60  | 44% 0.130 25  |   ~76   |   75   | ✓ pass   |
+  | text-inverted on bg-deep                | 13% 0.006 60  | 97% 0.005 60  |   ~95   |   75   | ✓ pass   |
+  | display H1 on bg-base (Pretendard 900)  | 97% 0.005 60  | 13% 0.006 60  |   ~95   |   45   | ✓ pass   |
+  | nav link on bg-base                     | 92% 0.005 60  | 38% 0.011 60  |   ~75   |   75   | ✓ pass   |
+  | spec table th-muted on bg-base          | 99% 0.003 60  | 42% 0.012 60  |   ~78   |   75   | ✓ pass   |
+  | bento-cell-a body (neutral-200) on deep | 13% 0.006 60  | 88% 0.010 60  |   ~85   |   75   | ✓ pass   |
+  | dark mode body on bg-base               | 15% 0.008 60  | 95% 0.005 60  |   ~92   |   75   | ✓ pass   |
+  | dark mode text-emphasis on bg-base      | 15% 0.008 60  | 72% 0.110 25  |   ~62   |   60   | ✓ pass   |
   APCA tool: https://www.myndex.com/APCA/
 
   VISUAL IMPROVEMENTS vs v1 (3+, C3 이후 의미 가짐)
@@ -72,6 +86,7 @@
     --color-neutral-200: oklch(88% 0.010 60);
     --color-neutral-400: oklch(70% 0.012 60);
     --color-neutral-500: oklch(58% 0.012 60);
+    --color-neutral-600: oklch(42% 0.012 60);  /* C2 — APCA Lc 75 페어용 */
     --color-neutral-700: oklch(38% 0.011 60);
     --color-neutral-900: oklch(20% 0.008 60);
     --color-neutral-950: oklch(13% 0.006 60);
@@ -129,7 +144,7 @@
     /* Ink (text) */
     --color-text-primary:    var(--color-neutral-950);
     --color-text-secondary:  var(--color-neutral-700);
-    --color-text-muted:      var(--color-neutral-500);
+    --color-text-muted:      var(--color-neutral-600);  /* C2 — was neutral-500, lifted for APCA Lc 75 */
     --color-text-inverted:   var(--color-neutral-50);
     --color-text-emphasis:   var(--color-brand-700);
 
