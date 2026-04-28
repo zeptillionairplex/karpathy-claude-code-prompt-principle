@@ -58,10 +58,26 @@
   | dark mode text-emphasis on bg-base      | 15% 0.008 60  | 72% 0.110 25  |   ~62   |   60   | ✓ pass   |
   APCA tool: https://www.myndex.com/APCA/
 
-  VISUAL IMPROVEMENTS vs v1 (3+, C3 이후 의미 가짐)
-  - typography contrast: hero h1 weight 900 + display Fraunces vs body 400
-  - color hierarchy: ink-primary / ink-secondary / ink-muted 3-tier 명확
-  - numeric alignment: spec table 숫자가 tabular figure (tnum + lnum)
+  VISUAL IMPROVEMENTS vs v1 (≥ 3, C3 commit 이후)
+  1. Typography contrast — display: Fraunces italic 500 (h1 em / strip em /
+     bento__heading em / narrative em). body: Pretendard 400. Voice contrast
+     (12 § 2 Rule 1) 명확. weight gap 100 (italic 500 vs body 400) +
+     family contrast.
+  2. Color hierarchy — text-primary (~Lc 95) / text-secondary (~Lc 78) /
+     text-muted (~Lc 76, C2 fix 후) / text-emphasis (brand-700, ~Lc 76)
+     의 4-tier luminance gap 균등. v1 은 ink-muted Lc ~58 미달.
+  3. Numeric alignment — spec table th/td 모두 tabular-nums + lining-nums.
+     "3,290,000" 같은 큰 수가 등폭으로 정렬, v1 은 proportional figure.
+  4. Measure — bento__body 36ch / narrative__copy 38ch / hero__lede 38ch.
+     v1 의 bento body 는 일부 max-width 누락.
+
+  Font pair 출처:
+  - Pretendard (KR body) + Fraunces (Latin display italic) → 12 § 4 row K-2
+    (KR body + Latin display 방향, 빈티지/heritage 톤)
+  - x-height ratio: Pretendard 0.520 / Fraunces 0.510 (gap 1.9%, ≤ 5% 통과)
+  - 12 § 2 Rule 1 (voice contrast: humanist sans + modern serif) ✓
+  - 12 § 2 Rule 2 (x-height match) ✓
+  - 12 § 2 Rule 3 (weight gap 500 italic vs 400) ✓
 -->
 
 <style>
@@ -181,6 +197,8 @@
     background: var(--color-bg-base);
     word-break: keep-all;
     line-break: strict;
+    /* C3 — F-3 fix: kern liga calt 활성. tnum/lnum 은 spec table 에서 별도 */
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -502,9 +520,12 @@
     font-size: var(--text-base);
     line-height: 1.7;
     color: var(--color-text-secondary);
+    /* C3 — F-2 fix: prose measure 36ch (한글 ≈ 28자) */
+    max-width: 36ch;
   }
   .bento__cell--a .bento__body {
     color: var(--color-neutral-200);
+    max-width: 44ch;  /* 큰 셀이라 약간 longer */
   }
   .bento__diagram {
     align-self: flex-end;
@@ -530,7 +551,10 @@
     gap: var(--space-12);
     align-items: center;
   }
-  .narrative__copy { }
+  .narrative__copy {
+    /* C3 — F-2 fix: prose measure 38ch */
+    max-width: 38ch;
+  }
   .narrative__h2 {
     font-family: "Pretendard", sans-serif;
     font-weight: 700;
@@ -608,6 +632,12 @@
     color: var(--color-text-primary);
     font-family: "Fraunces", Georgia, serif;
     font-weight: 500;
+    /* C3 — F-3 fix: 표 숫자 등폭 정렬 (tabular figures, lining) */
+    font-feature-settings: "tnum" 1, "lnum" 1, "kern" 1;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .spec__table th {
+    font-feature-settings: "tnum" 1, "lnum" 1, "kern" 1;
   }
   .spec__table tr:hover {
     background: color-mix(in oklch, var(--color-bg-warm) 60%, transparent);
