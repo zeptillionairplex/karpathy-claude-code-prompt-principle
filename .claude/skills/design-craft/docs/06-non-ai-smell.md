@@ -389,6 +389,108 @@ Each anti-pattern is defined as:
 
 ---
 
+## H. Accessibility-by-omission
+
+### #21 — Color-only state signal (color-blindness ignored)
+
+- **Symptom:** success / error / warning are distinguished by color alone.
+  Green check replaced by green text. Red error replaced by red border.
+  No icon or text reinforcement.
+- **Why it smells:** 8% of males (red-green color blindness) plus every
+  grayscale user cannot identify state. AI defaults to a single signal
+  (color) because that's the shortest code path. Violates WCAG 1.4.1.
+- **Replacement:** **triple signal** = color + icon + text. Alternatively,
+  ensure ≥ 30% luminance gap so the difference survives grayscale.
+- **Verify:** Chrome DevTools → Rendering → Emulate vision deficiencies.
+  Run all four (deuteranopia / protanopia / tritanopia / achromatopsia)
+  and confirm every state remains distinguishable.
+  → `./11-color-system.md` § 6, `./04-typography-and-color.md` § 6.7.
+
+### #22 — Direct primitive token reference (alias layer missing)
+
+- **Symptom:** Component CSS contains `color: var(--neutral-950);` or
+  `background: var(--gray-50);` — primitive tokens used directly in
+  component selectors. Semantic aliases (`--color-text-primary`) absent.
+- **Why it smells:** AI treats tokens as a single value-alias step,
+  skipping the 3-tier taxonomy (primitive / semantic / component).
+  Result: dark-mode swap decisions scatter across components, every
+  selector must change on rebrand, and the token system has zero
+  swappability.
+- **Replacement:** Keep primitives; add semantic aliases. Components
+  reference only aliases.
+  ```css
+  /* Define */
+  --color-text-primary: var(--neutral-950);
+  /* Use */
+  color: var(--color-text-primary);
+  ```
+  → `./02-design-system-tokens.md` § 7–8.
+- **Verify:** `grep -E 'var\(--(neutral|gray|amber|brand)-[0-9]+\)' src/`
+  in component code should return zero matches. Only semantic aliases
+  (`--color-*`, `--text-*`, `--bg-*`) should appear.
+
+---
+
+### #23 — No declared archetype (sophistication source missing)
+
+- **Symptom:** Design notes describe what the page contains but never
+  declare *which* of the 5 sophistication archetypes (Apple-Pro /
+  Editorial / Awwwards-craft / Utility-sober / Consumer-warm) it is.
+  The mock mixes graphite + warm cream + bento + vivid CTA — visual
+  vocabulary from three archetypes glued together.
+- **Why it smells:** "Sophistication" is not measurable as a vibe. When
+  no archetype is declared, the AI defaults to the recommended-mean of
+  every doc, which is precisely the AI-template look. The brown / dirty /
+  bland failure modes all trace to missing archetype choice.
+- **Replacement:** declare exactly one archetype in design notes (one
+  letter, A/B/C/D/E). Apply that archetype's color budget, type budget,
+  density budget, motion budget. → `./13-visual-sophistication.md` § 1.
+- **Verify:** grep design notes for "Archetype: A | B | C | D | E". If
+  absent, block. If "mixed" or "all", block.
+
+### #25 — Cross-archetype font mismatch (serif display on Apple-Pro)
+
+- **Symptom:** Page declares archetype A (Apple-Pro) — graphite brand,
+  product photo identity, calm vocabulary — but hero / body type uses
+  Fraunces / Playfair / a serif display. Or archetype D (Utility-sober)
+  with a serif display. Or archetype B (Editorial) running Geist /
+  Inter only with no serif voice anywhere.
+- **Why it smells:** Each archetype (`./13-visual-sophistication.md`
+  § 3) carries a typographic vocabulary. Apple-Pro = clean sans
+  super-family with weight 600–700, no italic display. Editorial =
+  serif display with sans body. Mixing these reads as "two design
+  decisions glued together" — exactly the AI-template-by-default
+  symptom. The `./12-font-pairing.md` § 1 archetype-gate exists to
+  prevent this; the failure mode is opening § 12 without consulting
+  § 13 first.
+- **Replacement:** match the pair to the declared archetype.
+  - A / D → super-family only (Geist / Inter / Inter Tight, weight 400/600/700).
+  - B → serif display + sans body (§ 3 L-1 / L-2 / L-12).
+  - C → experimental / variable axis.
+  - E → sans + sans pair, or rounded super-family.
+- **Verify:** read `./12-font-pairing.md` § 3 and § 4 — every chosen
+  row's "Archetype(s)" column must include the declared archetype.
+  If "uses L-9 (Fraunces) on archetype A surface" appears, block.
+
+### #24 — OKLCH brand not visually verified before commit
+
+- **Symptom:** A brand-500 token is shipped on the basis of "the spec
+  says L 55–65, C 0.12–0.18, pick H." The result on screen is brown /
+  muddy / dirty, but the spec passes.
+- **Why it smells:** OKLCH H × L surface is non-linear (`./11-color-system.md`
+  § 1 Step 2 table). H 60–110 at L < 65 renders as brown, not as the
+  intended olive / yellow / lime. AI emits the spec value without
+  rendering it; the human sees the result first time at PR review.
+- **Replacement:** before committing the token, generate 5 swatches at
+  L = 30 / 45 / 55 / 65 / 75 on `oklch.com` for the chosen H. Confirm
+  the rendered hue family matches the intent. If swatch L 50 reads
+  brown when olive was wanted, *the H/L combo is wrong* — re-pick
+  using the safe-band table.
+- **Verify:** `oklch.com` swatch screenshots attached to the PR (or
+  visual confirmation noted in design notes).
+
+---
+
 ## Soft signals (none alone is bad; 4+ together is an AI tell)
 
 These are individually defensible but trigger together when the page was
@@ -461,7 +563,15 @@ shipped from an AI default with no edits.
 - [ ] Semantic surface tokens (`--surface-1/2/3`) are defined separately for
       light and dark
 
-**Total: 27 items.** 4+ failures → design review. 6+ failures → block the
+### H. Accessibility-by-omission
+- [ ] State signals (success/error/warning) use color + icon + text triple
+      (not color alone) — passes all four Chrome DevTools "Emulate vision
+      deficiencies" modes
+- [ ] Component selectors reference semantic alias only — `grep` for
+      `var(--neutral-XXX)` / `var(--gray-XXX)` in component CSS returns 0
+      hits
+
+**Total: 29 items.** 4+ failures → design review. 6+ failures → block the
 merge.
 
 ---
